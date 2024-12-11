@@ -28,8 +28,8 @@
           </el-table-column>
           <el-table-column prop="stockTotal" label="总容量" width="80">
           </el-table-column>
-          <!-- <el-table-column prop="surplus" label="剩余量" width="80">
-          </el-table-column> -->
+          <el-table-column prop="surplus" label="剩余量" width="80">
+          </el-table-column>
           <el-table-column prop="area" label="单位" width="80">
           </el-table-column>
           <el-table-column prop="buildDate" label="创建时间" width="180">
@@ -67,12 +67,12 @@
           <el-form-item label="仓库名称" label-width="120px" prop="name">
             <el-input v-model="dataDialogForm.name" placeholder="仓库名称" style="width: 300px"></el-input>
           </el-form-item>
- 
+
           <el-form-item label="负责人" label-width="120px" prop="head">
             <template>
               <!-- label是显示的东西  value是对应选中的值 -->
               <el-select style="width: 300px;" v-model="dataDialogForm.head" placeholder="请选择公司员工">
-                <el-option v-for="item in adminAll" 
+                <el-option v-for="item in adminAll"
                 :key="item.id" :label="'[' + item.id + '] '+ item.name"
                  :value="item.name">
                 </el-option>
@@ -100,7 +100,7 @@
           <!-- <el-form-item label="单位" label-width="120px" prop="area">
             <el-input v-model="dataDialogForm.area" placeholder="容量(立方米)" style="width: 300px"></el-input>
           </el-form-item> -->
-          
+
           <el-form-item label="状态" label-width="120px" prop="status">
             <template> <!-- label是显示的东西  value是对应选中的值 -->
               <el-select style="width: 300px;" v-model="dataDialogForm.status" placeholder="请选择">
@@ -171,7 +171,7 @@ export default {
     }
 
     return {
- 
+
 
       //员工信息
       adminAll:[],
@@ -184,15 +184,15 @@ export default {
       addressData:{         	//存储地址数据
         areaCodes:'',
         addressName:''
-      },		
+      },
       //状态
       statusTwo: [
-        { id: 0, name: '正常' }, 
+        { id: 0, name: '正常' },
         { id: 1, name: '禁用' }
       ],
 
       dataForm: {   select: "", },
-      dataList: [],           //初始化数据列表   
+      dataList: [],           //初始化数据列表
       pageIndex: 1,           //初始页
       pageSize: 5,            //每页条数
       totalPage: 0,           //总条数
@@ -273,7 +273,7 @@ export default {
         var name = ''
         //name =CodeToText[code]
         this.addressData.areaCodes.map(item => name += CodeToText[item] + '/')  //由value集合遍历 寻找对应的地址名称 存为name
-        this.dataDialogForm.address =name;  
+        this.dataDialogForm.address =name;
         this.addressData.addressName = name;
         // console.log("地址:",this.addressData.name)
         // console.log("选择的全部信息:",this.addressData)
@@ -302,7 +302,7 @@ export default {
       this.update(formName);
     },
 
-    //更新 
+    //更新
     update(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -314,7 +314,7 @@ export default {
             .then((res) => {
               // console.log("添加/更新", res);
               this.dialogFormVisible = false; // 关闭窗口
-              // this.areaCodes="", 
+              // this.areaCodes="",
               // this.addressName=''
               // 清空添加数据的表单
               this.dataDialogForm = {
@@ -338,7 +338,7 @@ export default {
       });
       //全局更新
         // this. getDataList();
-       
+
     },
 
 
@@ -421,7 +421,7 @@ export default {
     },
 
   },
- 
+
   mounted() {
     this.getDataList()
     this.getAdminAll()
@@ -429,6 +429,5 @@ export default {
 }
 </script>
 <style></style>
-  
-  
-  
+
+

@@ -44,4 +44,5 @@ public interface JxPurchaseService {
 
     int checkAndExitGoods(JxmdPurchase purchase);
 
+    int stockOut(JxmdPurchase purchase);
 }

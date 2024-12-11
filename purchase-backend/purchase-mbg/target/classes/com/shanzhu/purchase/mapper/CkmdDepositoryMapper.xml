@@ -202,7 +202,11 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+    <select id="selectByName" resultType="com.shanzhu.purchase.model.CkmdDepository">
+      select * from  ckmd_depository
+        where name = #{name,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update ckmd_depository
     <set>
       <if test="row.id != null">
@@ -301,7 +305,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT} or name = #{name,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.shanzhu.purchase.model.CkmdDepository">
     update ckmd_depository

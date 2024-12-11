@@ -35,6 +35,20 @@ export default new Router({
         ]
     },
 
+
+   {
+     path:'/',
+     component: Home,
+     name: '供应商信息',
+     iconCls: 'el-icon-menu',
+     leaf: true,
+     children: [
+       { path: '/supplierShow', name: '供应商信息',
+         component: () => import('@/views/supplier/supplierShow.vue'),
+       }
+     ]
+   },
+
     {
         path: '/',
         component: Home,
@@ -64,9 +78,17 @@ export default new Router({
         name: '进销管理',
         iconCls: 'el-icon-menu',
         children: [
+          {
+            path: '/addShop', name: '采购商品品种',
+            component: () => import('@/views/jxmd/addShop.vue')
+          },
              { path: '/purchase', name: '采购',
                component: () => import('@/views/jxmd/purchase.vue')
              },
+          {
+            path: '/purchaseProcess', name:'采购计划审核',
+            component: () => import('@/views/jxmd/purchaseProcess.vue')
+          },
             { path: '/purchaseExit', name: '采购退货',
               component: () => import('@/views/jxmd/purchaseExit.vue')
             },
@@ -97,7 +119,9 @@ export default new Router({
             { path: '/depositoryOut',  name: '出库清单',
             component: () => import('@/views/ckmd/depositoryOut')
             },
-
+            { path: '/depositoryHistoryOut',  name: '出库清单',
+            component: () => import('@/views/ckmd/depositoryHistoryOut')
+            },
         ]
     },
     {

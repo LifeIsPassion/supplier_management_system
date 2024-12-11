@@ -7,6 +7,7 @@
     <result column="head" jdbcType="VARCHAR" property="head" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
     <result column="branch" jdbcType="VARCHAR" property="branch" />
     <result column="branch_account" jdbcType="VARCHAR" property="branchAccount" />
@@ -74,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, supplier_name, head, phone, address, shop_name, branch, branch_account, supplier_proxy, 
+    id, supplier_name, head, phone, address, province, shop_name, branch, branch_account, supplier_proxy,
     create_date, update_time, other
   </sql>
   <select id="selectByExample" parameterType="com.shanzhu.purchase.model.JcmdSupplierExample" resultMap="BaseResultMap">
@@ -112,11 +113,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into jcmd_supplier (supplier_name, head, phone, 
-      address, shop_name, branch, 
+      address,province,shop_name, branch,
       branch_account, supplier_proxy, create_date, 
       update_time, other)
     values (#{supplierName,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR},#{province,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR},
       #{branchAccount,jdbcType=VARCHAR}, #{supplierProxy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{other,jdbcType=VARCHAR})
   </insert>

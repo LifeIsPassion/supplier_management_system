@@ -1,11 +1,10 @@
 <template>
   <div>
-    <!-- 仓库列表 -->
     <el-card class=" box-card">
       <div>
         <el-form :inline="true" :model="dataForm" class="demo-form-inline">
-          <el-form-item>
-            <el-input v-model="dataForm.select" placeholder="请输入入库编号" clearable></el-input>
+          <el-form-item label="出库编号">
+            <el-input v-model="dataForm.select" placeholder="请输入出库编号" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="info" @click="getDataList">查询</el-button>
@@ -13,106 +12,115 @@
           </el-form-item>
         </el-form>
 
-
         <el-table ref="multipleTable" :data="dataList" tooltip-effect="dark" style="width: 100%">
-          <el-table-column type="selection" width="56">
+          <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column prop="id" label="Id" width="60">
           </el-table-column>
-          <el-table-column prop="inId" label="入库号" width="100">
+          <el-table-column prop="outId" label="出库编号" width="100">
           </el-table-column>
-          <el-table-column prop="depository" label="入库仓库" width="100">
+          <el-table-column prop="depository" label="出库仓库" width="100">
           </el-table-column>
-          <el-table-column prop="shopName" label="入库商品" width="100" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column prop="shopNumber" label="入库数量" width="80">
+          <el-table-column prop="shopName" label="出库商品" width="80">
           </el-table-column>
           <el-table-column prop="specs" label="规格" width="60">
           </el-table-column>
-          <el-table-column prop="shopPrice" label="入库单价" width="80">
+          <el-table-column prop="shopNumber" label="出库数量" width="80">
           </el-table-column>
-          <el-table-column prop="priceTotal" label="总价" width="60">
+          <el-table-column prop="shopPrice" label="出库单价" width="80">
           </el-table-column>
-          <el-table-column prop="inUser" label="入库人" width="80">
+          <el-table-column prop="totalPrice" label="总价" width="80">
           </el-table-column>
-          <el-table-column prop="status" label="是否入库" width="80">
+          <el-table-column prop="outUser" label="出库人" width="100">
+          </el-table-column>
+          <el-table-column prop="status" label="是否出库" width="80">
             <template slot-scope="scope">
-              <span>{{ scope.row.status == 0 ? "已入库" : "未入库" }}</span>
+              <span>{{ scope.row.status == 0 ? '是' : '否' }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="isInspection" label="是否质检" width="80">
+          <el-table-column prop="createDate" label="创建时间" width="170">
             <template slot-scope="scope">
-              <span>{{ scope.row.isInspection == 0 ? "已质检" : "未质检" }}</span>
+              <span>{{scope.row.createDate ==null ? '': scope.row.createDate.replace("T"," ") }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="入库时间" width="170">
+          <el-table-column prop="date" label="出库时间" width="170">
+            <template slot-scope="scope">
+              <span>{{scope.row.date ==null ? '': scope.row.date.replace("T"," ") }}</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="date" label="创建时间" width="170"> </el-table-column>
-          <el-table-column prop="remark" label="备注" width="80" show-overflow-tooltip>
+          <el-table-column prop="remark" label="备注" width="100" show-overflow-tooltip>
           </el-table-column>
 
-          <el-table-column  label="操作" fixed="right"  width="150">
+          <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               <el-button size="mini" type="primary" style="margin-left: 0% ; margin-top: 5px;"
-                @click="check(scope.$index, scope.row)">质检合格</el-button>
-              <el-button size="mini" type="primary" style="margin-left: 0% ; margin-top: 5px;"
-                         @click="checkNo(scope.$index, scope.row)">质检不合格</el-button>
+                         @click="check(scope.$index, scope.row)">审核</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="pageIndex"
-          :page-sizes="[5, 7,10]" :page-size="pageSize" :total="totalPage"
-          layout="total, sizes, prev, pager, next, jumper" style="margin-top: 30px">
+                       :page-sizes="[5,7, 10]" :page-size="pageSize" :total="totalPage"
+                       layout="total, sizes, prev, pager, next, jumper" style="margin-top: 30px">
         </el-pagination>
       </div>
 
 
       <!-- Form -->
       <el-dialog :title="dataDialogForm.id === 0 ? '新增入库' : '更新入库'" width="35%" :visible.sync="dialogFormVisible"
-        @close="closeDialog()">
+                 @close="closeDialog()">
         <el-form :model="dataDialogForm" :rules="rules" ref="depositoryForm">
 
-          <el-form-item label="入库仓库" label-width="120px" prop="depository">
+          <el-form-item label="出库仓库" label-width="120px" prop="depository">
+            <template>
+              <el-select style="width: 300px;" v-model="dataDialogForm.depository" placeholder="请选择">
+                <el-option v-for="item in DepositoryAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
+                           :value="item.name">
+                </el-option>
+              </el-select>
+            </template>
+          </el-form-item>
+
+          <el-form-item label="出库商品" label-width="120px" prop="shopName">
             <template>
               <!-- label是显示的东西  value是对应选中的值 -->
-              <el-select style="width: 300px;" v-model="dataDialogForm.depository" placeholder="请选择">
-                <el-option v-for="item in DepositoryAll"
-                :key="item.id" :label="'[' + item.id + '] '+ item.name"
-                 :value="item.name">
-                </el-option>
-              </el-select>
-            </template>
-          </el-form-item>
-
-          <el-form-item label="入库商品" label-width="120px" prop="shopName">
-            <template>
               <el-select style="width: 300px;" v-model="dataDialogForm.shopName" placeholder="请选择">
-                <el-option v-for="item in ShopIdAndName" :key="item.id" :label="'[' + item.id + '] '+ item.name"
-                 :value="item.name">
+                <el-option v-for="item in ShopIdAndName" :key="item.id" :label="'[' + item.id + '] ' + item.name"
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
           </el-form-item>
 
-          <el-form-item label="入库数量" label-width="120px" prop="shopNumber">
+
+          <el-form-item label="出库数量" label-width="120px" prop="shopNumber">
             <el-input v-model="dataDialogForm.shopNumber" placeholder="入库数量" style="width: 300px"></el-input>
           </el-form-item>
 
           <el-form-item label="规格" label-width="120px" prop="specs">
-            <template> <!-- label是显示的东西  value是对应选中的值 -->
+            <template>
               <el-select style="width: 300px;" v-model="dataDialogForm.specs" placeholder="请选择">
                 <el-option v-for="item in specsList"
-                :key="item.id" :label="'['+item.id+'] '+item.name" :value="item.name">
+                           :key="item.id"
+                           :label="'[' + item.id + '] ' + item.name"
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
           </el-form-item>
 
+          <el-form-item label="出库单价" label-width="120px" prop="shopPrice">
+            <el-input v-model="dataDialogForm.shopPrice" placeholder="出库单价" style="width: 300px"></el-input>
+          </el-form-item>
 
-          <el-form-item label="入库单价" label-width="120px" prop="shopPrice">
-            <el-input v-model="dataDialogForm.shopPrice" placeholder="入库单价" style="width: 300px"></el-input>
+          <el-form-item label="是否出库" label-width="120px" prop="status">
+            <template> <!-- label是显示的东西  value是对应选中的值 -->
+              <el-select style="width: 300px;" v-model="dataDialogForm.status" placeholder="请选择">
+                <el-option v-for="item in statusTwo" :key="item.id" :label="'[' + item.id + '] ' + item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </template>
           </el-form-item>
 
           <el-form-item label="描述信息" label-width="120px" prop="remark">
@@ -132,53 +140,24 @@
 <script>
 
 
-
 export default {
-  name: "depositoryIn",
+  name: "depositoryOut",
 
   data() {
-      //校验入库商品
-    var checkDepositoryInName = (rule, value, callback) => {
-
-      if (this.dataDialogForm.id !== 0) {
-        if (value === "") {
-          callback(new Error("请输入商品"));
-        }
-        // 说明是更新操作
-        callback();
-      } else if (value === "") {
-        callback(new Error("请输入商品名称"));
-      } else {
-        // console.log("获取value:", value);
-        // 调用后端接口 检查 编号名称是否存在
-        this.$http.get("/depositoryIn/checkDepositoryInId?DepositoryInId=" + value).then((res) => {
-          // console.log("验证部门是否存在", res);
-          if (res.data.data === "NO") {
-            // 说明角色名不存在，可以使用
-            callback();
-          } else {
-            callback(new Error("商品重复"));
-          }
-        }).catch(console.error());
-        //callback();
-      }
-    };
-
     return {
 
-
-      DepositoryAll: [],  //所有仓库信息
-      ShopIdAndName:[],   //所有商品id和name
-      //状态 是否入库
+      DepositoryAll: [],  //下拉  仓库信息
+      ShopIdAndName: [],   //下拉  商品信息
+      //状态
       statusTwo: [
-        { id: 0, name: '已入库' }, { id: 1, name: '未入库' }
+        { id: 0, name: '是' }, { id: 1, name: '否' }
       ],
 
       //规格列表
-      specsList:[
-      { id: 0, name:'斤' }, { id: 1, name: '个' },{id:2,name:'件' },
-      {id:3, name:'箱'}
-      ] ,
+      specsList: [
+        { id: 0, name: '斤' }, { id: 1, name: '个' }, { id: 2, name: '件' },
+        { id: 3, name: '箱' }
+      ],
 
 
       dataForm: {
@@ -190,28 +169,25 @@ export default {
       totalPage: 0,         //总条数
       dataListLoading: false,
 
-
       //编辑弹窗框
       dialogFormVisible: false,
       dialogFormSubmitVisible: false,
-      dataDialogForm: {   //参数
+      dataDialogForm: {   //参数  也可以使用 xx:null来定义
         id: 0,
-        inId: "",
+        outId: "",
         depository: "",
         shopName: "",
         shopNumber: "",
         specs: "",
         shopPrice: "",
         status: "",
-        inUser: "", //入库人
+        OutUser: "", //入库人
         remark: "",
       },
-      itemRowExitGoods:[],    //退货按钮行信息
       // 用户校验---------前端提示
       rules: {
-        name: [{ validate: checkDepositoryInName, trigger: "blur" }],
+        //  name: [{ validate: checkDepositoryOutName, trigger: "blur" }],
         // remark: [{ required: true, message: "请输入描述信息", trigger: "blur" }],
-        //--------其他需要用的
       }
     }
   },
@@ -232,7 +208,7 @@ export default {
     openDialog() {
       this.dialogFormVisible = true;
       this.dataDialogForm.id = 0;
-      this.dataDialogForm.inId = "";
+      this.dataDialogForm.outId = "";
       this.dataDialogForm.depository = "",
         this.dataDialogForm.shopName = "",
         this.dataDialogForm.shopNumber = "",
@@ -240,7 +216,6 @@ export default {
         this.dataDialogForm.shopPrice = "",
         this.dataDialogForm.status = "",
         this.dataDialogForm.remark = "";
-
     },
     //关闭窗口
     closeDialog() {
@@ -264,7 +239,7 @@ export default {
       this.dialogFormVisible = true;   // 打开更新的窗口
       // 绑定需要更新的数据  数据是table里的prop
       this.dataDialogForm.id = item.id;
-      this.dataDialogForm.inId = item.inId;
+      this.dataDialogForm.outId = item.outId;
       this.dataDialogForm.depository = item.depository;
       this.dataDialogForm.shopName = item.shopName;
       this.dataDialogForm.shopNumber = item.shopNumber;
@@ -289,16 +264,16 @@ export default {
             return;
           }
           this.dialogFormSubmitVisible = true;
-
+          // console.log("提交的",this.depositoryForm);
           //add调用---> saveOrUpdateRole 通过id(前端传的)判断是增加还是修改
-          this.$http.post("/depositoryIn/add", this.dataDialogForm)
+          this.$http.post("/depositoryOut/add", this.dataDialogForm)
             .then((res) => {
               // console.log("添加/更新", res);
               this.dialogFormVisible = false; // 关闭窗口
               // 清空添加数据的表单
               this.dataDialogForm = {
                 id: 0,
-                inId: "",
+                outId: "",
                 depository: "",
                 shopName: "",
                 shopNumber: "",
@@ -319,7 +294,7 @@ export default {
     },
 
 
-    // 删除信息------------------------
+    // 删除用户信息------------------------
     handleDelete(index, item) {
 
       this.$confirm("此操作将永久该记录, 是否继续?", "提示", {
@@ -333,7 +308,7 @@ export default {
           }
           this.dialogFormSubmitVisible = true;
           this.$http
-            .post("/depositoryIn/delete/?id=" + item.id)
+            .post("/depositoryOut/delete/?id=" + item.id)
             .then((res) => {
               // console.log(res)
               if (res.data.data === '0') {
@@ -360,7 +335,49 @@ export default {
           });
         });
     },
-    //
+
+//
+    //-----------审核 check
+    check(index,item){
+      this.$confirm('确认审核后将正式出仓, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post("/depositoryOut/checkById?id="+item.id).then((res=>{
+          // console.log(res)
+          if(res.data.code ===200){
+            this.$message({
+              type: 'success',
+              message: '审核通过!'
+            });
+            this.getDataList();    //完成就更新操作
+          }
+          if(error.response.status ===500){
+            this.$message({
+              type: 'error',
+              message: "操作失败!"
+            });
+          }
+          if(res.data.code ===500){
+            this.$message({
+              type: 'error',
+              message: "库存不足!"
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: '操作错误,请联系管理员!'
+            });
+          }
+        }));
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
+    },
 
     //查询仓库方法
     getDepositoryAll() {
@@ -371,19 +388,22 @@ export default {
     },
 
     //查询 全部商品 id:name   key:value
-      getShopIdAndName(){
-        this.$http.get("/shop/getShopNameAll").then((res)=>{
-            // console.log("商品信息",res)
-            this.ShopIdAndName =res.data.data;
-        })
-      },
+    getShopIdAndName() {
+      this.$http.get("/shop/getShopNameAll").then((res) => {
+        // console.log("商品信息", res)
+        this.ShopIdAndName = res.data.data;
+      })
+    },
+
     //-------------------------------------
     //获取初始化数据
     getDataList() {
+      this.getDepositoryAll();
+      this.getShopIdAndName();
       if (this.dataListLoading) {
         return;
       }
-
+      // this.dataListLoading=true;
       //请求参数封装
       const params = {
         params: {
@@ -394,84 +414,26 @@ export default {
 
       };
       //后端请求 分页获取对象
-      this.$http.get("/depositoryIn/list", params).then((res) => {
+      this.$http.get("/depositoryOut/listHistory", params).then((res) => {
         // console.log("提交的参数", params);
         //需要通过响应的结果配置
+        // console.log(res);
         this.dataList = res.data.data.list;
         this.totalPage = res.data.data.total;
         this.dataListLoading = false;
 
       });
     },
-    //
-    checkNo(index,item){
-      this.itemRowExitGoods = item;
-      this.$confirm('确认质检不合格后将发起退货, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-          this.$http.post("/purchase/checkAndExitGoods?remark=" + "入库审核不合格退货" , this.itemRowExitGoods).then((res) =>{
-            console.log("退货",res)
-            if (res.data.data ==200 ) {
-              this.$message({
-                type: "success",
-                message: "操作成功!",
-              });
-            }
-            if (res.data.data ==1002 ) {
-              this.$message({
-                type: "error",
-                message: res.data.message
-              });
-            }
-
-          });
-    })
-      this.getDataList();
-    },
-
-
-    //-----------质检 check
-    check(index,item){
-      this.$confirm('确认质检后将正式存入仓库, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.post("/depositoryIn/checkById?id="+item.id).then((res=>{
-              // console.log(res)
-              if(res.data.code ===200){
-                this.$message({
-                type: 'success',
-                message: '商品质检完成!'
-          });
-          this.getDataList();    //完成就更新操作
-         }else{
-            this.$message({
-                type: 'error',
-                message: '操作错误,请联系管理员!'
-          });
-          }
-          }))
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-        this.getDataList();
-    },
 
   },
 
   mounted() {
-      this.getDataList()
-      this.getDepositoryAll();   //怎么异步
-      this.getShopIdAndName();
+
+    this.getDataList()
   }
 }
 </script>
 <style></style>
+
 
 

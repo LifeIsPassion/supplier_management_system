@@ -43,8 +43,17 @@ public class JxmdPurchase implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ApiModelProperty(value = "商品是否入库")
+    private int isIn;
+
     @ApiModelProperty(value = "单位规格  个斤盒")
     private String specs;
+
+    @ApiModelProperty(value = "商品占用空间")
+    private Long shopSpace;
+
+    @ApiModelProperty(value = "供应商所处地点")
+    private String supplierSpace;
 
     @ApiModelProperty(value = "是否存在，退货后不显示，可增加查询按钮")
     private Integer isDestroy;
@@ -161,6 +170,22 @@ public class JxmdPurchase implements Serializable {
 
     public void setIsDestroy(Integer isDestroy) {
         this.isDestroy = isDestroy;
+    }
+
+    public int getIsIn() {
+        return isIn;
+    }
+
+    public void setIsIn(int isIn) {
+        this.isIn = isIn;
+    }
+
+    public Long getShopSpace() {
+        return shopSpace;
+    }
+
+    public void setShopSpace(Long shopSpace) {
+        this.shopSpace = shopSpace;
     }
 
     @Override

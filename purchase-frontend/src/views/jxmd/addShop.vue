@@ -36,8 +36,6 @@
           </el-table-column>
           <el-table-column prop="totalPrice" label="总价" width="80">
           </el-table-column>
-          <el-table-column prop="shopSpace" label="商品占空间" width="80">
-          </el-table-column>
           <el-table-column prop="time" label="采购时间" width="180">
             <template slot-scope="scope">
               <span>{{ scope.row.time == null ? '' : scope.row.time.replace("T", " ") }}</span>
@@ -53,34 +51,34 @@
           <el-table-column fixed="right" label="操作" width="200">
             <template slot-scope="scope" label-width="auto" margin-left="0px">
               <el-button size="mini" type="primary" icon="el-icon-edit"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                         @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" icon="el-icon-delete"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-<!--              <el-button v-show="putStockID === 0" size="mini" type="primary" icon="el-icon-thumb"-->
-<!--                style="width: 75px; margin-left: 0% ; margin-top: 5px;"-->
-<!--                @click="inStock(scope.$index, scope.row)">入库</el-button>-->
-<!--              <el-button v-show="putStockID === 0" size="mini" type="primary" icon="el-icon-remove-outline"-->
-<!--                @click="exitShop(scope.$index, scope.row)">退货</el-button>-->
+                         @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button v-show="putStockID === 0" size="mini" type="primary" icon="el-icon-thumb"
+                         style="width: 75px; margin-left: 0% ; margin-top: 5px;"
+                         @click="inStock(scope.$index, scope.row)">入库</el-button>
+              <el-button v-show="putStockID === 0" size="mini" type="primary" icon="el-icon-remove-outline"
+                         @click="exitShop(scope.$index, scope.row)">退货</el-button>
             </template>
           </el-table-column>
 
         </el-table>
         <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="pageIndex"
-          :page-sizes="[5, 7, 10]" :page-size="pageSize" :total="totalPage"
-          layout="total, sizes, prev, pager, next, jumper" style="margin-top: 30px">
+                       :page-sizes="[5, 7, 10]" :page-size="pageSize" :total="totalPage"
+                       layout="total, sizes, prev, pager, next, jumper" style="margin-top: 30px">
         </el-pagination>
       </div>
 
       <!-- 新增/编辑    Form -->
       <el-dialog :title="dataDialogForm.id === 0 ? '新增采购单' : '更新采购单'" width="35%" :visible.sync="dialogFormVisible"
-        @close="closeDialog()">
+                 @close="closeDialog()">
         <el-form :model="dataDialogForm" :rules="rules" ref="depositoryForm">
           <el-form-item label="采购员工" label-width="120px" prop="purchaseUser">
             <template>
               <!-- label是显示的东西  value是对应选中的值 -->
               <el-select style="width: 300px;" v-model="dataDialogForm.purchaseUser" placeholder="请选择公司员工">
                 <el-option v-for="item in adminAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
-                  :value="item.name">
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
@@ -90,7 +88,7 @@
             <template>
               <el-select style=" width: 300px;" v-model="dataDialogForm.shop" placeholder="请选择">
                 <el-option v-for="item in shopAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
-                  :value="item.name">
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
@@ -100,7 +98,7 @@
             <template>
               <el-select style=" width: 300px;" v-model="dataDialogForm.shopType" placeholder="请选择">
                 <el-option v-for="item in shopTypeList" :key="item.id" :label="'[' + item.id + '] ' + item.shopType"
-                  :value="item.shopType">
+                           :value="item.shopType">
                 </el-option>
               </el-select>
             </template>
@@ -108,7 +106,7 @@
 
           <el-form-item label="采购供应商" label-width="120px" prop="supplier">
             <el-autocomplete style=" width: 300px;" popper-class="my-autocomplete" v-model="dataDialogForm.supplier"
-              :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
+                             :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
               <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick">
               </i>
               <template slot-scope="{ item }">
@@ -122,7 +120,7 @@
             <template>
               <el-select style=" width: 300px;" v-model="dataDialogForm.specs" placeholder="请选择">
                 <el-option v-for="item in specsList" :key="item.id" :label="'[' + item.id + '] ' + item.name"
-                  :value="item.name">
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
@@ -134,18 +132,15 @@
           <el-form-item label="采购单价" label-width="120px" prop="price">
             <el-input v-model="dataDialogForm.price" placeholder="采购单价" style="width: 300px"></el-input>
           </el-form-item>
-          <el-form-item label="商品占用空间" label-width="120px" prop="shopSpace">
-            <el-input v-model="dataDialogForm.shopSpace" placeholder="商品占用空间" style="width: 300px"></el-input>
+          <el-form-item label="状态" label-width="120px" prop="status">
+            <template>
+              <el-select style=" width: 300px;" v-model="dataDialogForm.status" placeholder="请选择">
+                <el-option v-for="item in statusTwo" :key="item.id" :label="'[' + item.id + ']' + item.name"
+                           :value="item.id">
+                </el-option>
+              </el-select>
+            </template>
           </el-form-item>
-<!--          <el-form-item label="状态" label-width="120px" prop="status">-->
-<!--            <template>-->
-<!--              <el-select style=" width: 300px;" v-model="dataDialogForm.status" placeholder="请选择">-->
-<!--                <el-option v-for="item in statusTwo" :key="item.id" :label="'[' + item.id + ']' + item.name"-->
-<!--                  :value="item.id">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--            </template>-->
-<!--          </el-form-item>-->
           <el-form-item label="备注" label-width="120px" prop="remark">
             <el-input type="textarea" v-model="dataDialogForm.remark" style="width: 300px"></el-input>
           </el-form-item>
@@ -163,7 +158,7 @@
             <template slot-scope="scope">
               <el-select v-model="PurchaseName" placeholder="请选择">
                 <el-option v-for="item in DepositoryInfoAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
-                  :value="item.name">
+                           :value="item.name">
                 </el-option>
               </el-select>
             </template>
@@ -176,7 +171,7 @@
       </el-dialog>
 
       <!-- 退货操作按钮 -->
-       <el-dialog title="退货原因" :visible.sync="dialogExitGoods">
+      <el-dialog title="退货原因" :visible.sync="dialogExitGoods">
         <el-form label-width="120px">
           <el-form-item label="退货原因" label-width="120px">
             <el-input type="textarea" placeholder=" " v-model="remark"  style="width: 300px;" ></el-input>
@@ -216,7 +211,7 @@ export default {
       shopAll: {   id: '',  name: '', },
       //状态
       statusTwo: [{ id: 0, name: '完成' },
-      { id: 1, name: '进行中' }],
+        { id: 1, name: '进行中' }],
 
       dataForm: {
         select: "",
@@ -232,7 +227,7 @@ export default {
       pageIndex: 1,   //初始页
       pageSize: 5,        //每页条数
       totalPage: 0,         //总条数
-        dialogExitGoods: false, //退货
+      dialogExitGoods: false, //退货
       dataListLoading: false,
       dialogPutStock: false,  //入库按钮
       //编辑弹窗框
@@ -252,7 +247,6 @@ export default {
         time: '',
         status: '',
         remark: '',
-        shopSpace: '',
       },
       itemRowPurchaseInfo: [],   //入库操作的每一行的采购信息
       itemRowExitGoods:[],    //退货按钮行信息
@@ -289,7 +283,6 @@ export default {
         this.dataDialogForm.quantity = '',
         this.dataDialogForm.specs = '',
         this.dataDialogForm.price = '',
-        this.dataDialogForm.shopSpace = '',
         this.dataDialogForm.status = '',
         this.dataDialogForm.remark = '';
     },
@@ -308,22 +301,12 @@ export default {
         status: '',
         specs: '',
         remark: '',
-        shopSpace: '',
       };
     },
 
 
     //编辑----------------------
     handleEdit(index, item) {
-      if (item.status === 0) {
-        this.$confirm("该采购计划已审核完成，无法更改", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        return;
-      }
-
       this.dialogFormVisible = true;   // 打开更新的窗口
       // 绑定需要更新的数据  数据是table里的prop
       this.dataDialogForm.id = item.id;
@@ -335,7 +318,6 @@ export default {
       this.dataDialogForm.price = item.price;
       this.dataDialogForm.specs = item.specs;
       this.dataDialogForm.status = item.status;
-      this.dataDialogForm.shopSpace = item.shopSpace;
       this.dataDialogForm.remark = item.remark;
       // console.log(this.dataDialogForm);
     },
@@ -370,7 +352,6 @@ export default {
                 price: '',
                 status: '',
                 specs: '',
-                shopSpace: '',
                 remark: '',
               };
               this.dialogFormSubmitVisible = false;
@@ -384,16 +365,8 @@ export default {
     },
 
 
-    // 删除采购信息------------------------
+    // 删除用户信息------------------------
     handleDelete(index, item) {
-      if (item.status === 0){
-        this.$confirm("该采购计划已审核完成，无法删除", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        return;
-      }
       this.$confirm("此操作将永久该记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -491,53 +464,53 @@ export default {
       }
       // console.log("params", params)
       this.$http.post("/purchase/putStock?depositoryName=" + this.PurchaseName, this.itemRowPurchaseInfo).then((res) => {
-        console.log("入库返回内容", res)
-        if (res.data.code === 200) {
-          this.$message({
-            message: '入库成功！',
-            type: 'success'
-          });
-          // this.dialogPutStock = false;
-        }
+          console.log("入库返回内容", res)
+          if (res.data.code === 200) {
+            this.$message({
+              message: '入库成功！',
+              type: 'success'
+            });
+            // this.dialogPutStock = false;
+          }
 
-        if (res.data.code !=200) {   //重复入库
-          this.$message.error(res.data.message);
+          if (res.data.code !=200) {   //重复入库
+            this.$message.error(res.data.message);
+          }
+          this.PurchaseName='';
+          this.dialogPutStock = false;
         }
-        this.PurchaseName='';
-        this.dialogPutStock = false;
-      }
       )
     },
 
 //---------------退货
-exitShop(index,item){
-  //0 完成 1 进行中
-  //如果item.status  为0完成 则删除采购信息，生成采购退货信息  生成出库清单
-  //如果为1进行中 则删除采购信息，生成采购退货信息，不生产出库清单
-          this.dialogExitGoods =true; // 替代
-        this.itemRowExitGoods = item;
-},
-  //退货确认按钮
-  checkExitGoods(remark){
-        this.$http.post("/purchase/checkAndExitGoods?remark=" + remark , this.itemRowExitGoods).then((res) =>{
-            console.log("退货",res)
-            if (res.data.data ==200 ) {
-              this.$message({
-                  type: "success",
-                  message: "操作成功!",
-                });
-            }
-            if (res.data.data ==1002 ) {
-              this.$message({
-                  type: "error",
-                  message: res.data.message
-                });
-            }
+    exitShop(index,item){
+      //0 完成 1 进行中
+      //如果item.status  为0完成 则删除采购信息，生成采购退货信息  生成出库清单
+      //如果为1进行中 则删除采购信息，生成采购退货信息，不生产出库清单
+      this.dialogExitGoods =true; // 替代
+      this.itemRowExitGoods = item;
+    },
+    //退货确认按钮
+    checkExitGoods(remark){
+      this.$http.post("/purchase/checkAndExitGoods?remark=" + remark , this.itemRowExitGoods).then((res) =>{
+        console.log("退货",res)
+        if (res.data.data ==200 ) {
+          this.$message({
+            type: "success",
+            message: "操作成功!",
+          });
+        }
+        if (res.data.data ==1002 ) {
+          this.$message({
+            type: "error",
+            message: res.data.message
+          });
+        }
 
-        });
+      });
 
-    this.dialogExitGoods=false;
-  },
+      this.dialogExitGoods=false;
+    },
 
     //-------------------------dialog搜索
     querySearch(queryString, cb) {

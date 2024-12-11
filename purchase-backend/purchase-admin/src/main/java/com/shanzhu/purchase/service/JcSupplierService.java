@@ -38,4 +38,8 @@ public interface JcSupplierService {
 
     List<Map> getNameAndAddress();
 
+    /**
+     * 供应商数据展示
+     */
+    public List getSupplierToEchart();
 }

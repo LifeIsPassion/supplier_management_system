@@ -1,5 +1,4 @@
 package com.shanzhu.purchase.dto;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

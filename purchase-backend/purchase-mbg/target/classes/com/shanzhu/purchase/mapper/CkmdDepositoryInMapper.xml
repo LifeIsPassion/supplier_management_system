@@ -94,6 +94,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -224,6 +225,21 @@
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+  </select>
+  <select id="selectById" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
+    select *
+    from ckmd_depository_in
+    where in_id = #{inId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
+    select *
+    from ckmd_depository_in
+    where is_inspection = 1
+  </select>
+  <select id="selectById1" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
+    select *
+    from ckmd_depository_in
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update ckmd_depository_in

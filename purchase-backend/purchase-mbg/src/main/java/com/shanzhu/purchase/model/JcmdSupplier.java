@@ -21,6 +21,9 @@ public class JcmdSupplier implements Serializable {
     @ApiModelProperty(value = "地址")
     private String address;
 
+    @ApiModelProperty(value = "省份")
+    private String province;
+
     @ApiModelProperty(value = "商品名称")
     private String shopName;
 
@@ -138,6 +141,14 @@ public class JcmdSupplier implements Serializable {
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     @Override

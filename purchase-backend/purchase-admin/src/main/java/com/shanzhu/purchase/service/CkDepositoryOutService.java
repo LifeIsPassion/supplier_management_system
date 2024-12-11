@@ -33,6 +33,8 @@ public interface CkDepositoryOutService {
      */
     List<CkmdDepositoryOut> list(String keyword, Integer pageSize, Integer pageNum);
 
+    List<CkmdDepositoryOut> listH(String keyword, Integer pageSize, Integer pageNum);
+
 
     int addOrUpdateDepositoryOut(CkmdDepositoryOut ckmdDepositoryOut);
 

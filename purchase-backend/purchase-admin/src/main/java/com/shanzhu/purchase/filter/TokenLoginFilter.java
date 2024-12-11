@@ -29,6 +29,8 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
     }
 
+    //默认拦截路径 /login
+
     /**
      * 具体认证的方法
      *

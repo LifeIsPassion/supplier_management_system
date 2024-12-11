@@ -6,20 +6,32 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class CkmdStock implements Serializable {
-    @ApiModelProperty(value = "序号 商品库存id")
+    @ApiModelProperty(value = "序号 入库id")
     private Long id;
 
-    @ApiModelProperty(value = "商品")
-    private String shop;
+    @ApiModelProperty(value = "商品名")
+    private String shopName;
 
     @ApiModelProperty(value = "商品类型")
     private String shopType;
 
-    @ApiModelProperty(value = "库存量")
-    private Long quantity;
+    @ApiModelProperty(value = "商品售价")
+    private Long shopPrice;
 
-    @ApiModelProperty(value = "规格 斤 、千克、个")
-    private String speces;
+    @ApiModelProperty(value = "入库数量")
+    private Long shopNumber;
+
+    @ApiModelProperty(value = "入库商品总价")
+    private Long priceTotal;
+
+    @ApiModelProperty(value = "单位规格")
+    private String specs;
+
+    @ApiModelProperty(value = "入库人")
+    private String inUser;
+
+    @ApiModelProperty(value = "供应商")
+    private String shopSupplier;
 
     @ApiModelProperty(value = "仓库名")
     private String depository;
@@ -28,10 +40,7 @@ public class CkmdStock implements Serializable {
     private String address;
 
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "修改时间")
-    private LocalDateTime updateTime;
+    private LocalDateTime date;
 
     @ApiModelProperty(value = "备注")
     private String remark;
@@ -46,36 +55,12 @@ public class CkmdStock implements Serializable {
         this.id = id;
     }
 
-    public String getShop() {
-        return shop;
-    }
-
-    public void setShop(String shop) {
-        this.shop = shop;
-    }
-
     public String getShopType() {
         return shopType;
     }
 
     public void setShopType(String shopType) {
         this.shopType = shopType;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getSpeces() {
-        return speces;
-    }
-
-    public void setSpeces(String speces) {
-        this.speces = speces;
     }
 
     public String getDepository() {
@@ -94,22 +79,6 @@ public class CkmdStock implements Serializable {
         this.address = address;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -118,24 +87,91 @@ public class CkmdStock implements Serializable {
         this.remark = remark;
     }
 
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public Long getShopPrice() {
+        return shopPrice;
+    }
+
+    public void setShopPrice(Long shopPrice) {
+        this.shopPrice = shopPrice;
+    }
+
+
+    public Long getPriceTotal() {
+        return priceTotal;
+    }
+
+    public void setPriceTotal(Long priceTotal) {
+        this.priceTotal = priceTotal;
+    }
+
+    public String getSpecs() {
+        return specs;
+    }
+
+    public void setSpecs(String specs) {
+        this.specs = specs;
+    }
+
+    public String getInUser() {
+        return inUser;
+    }
+
+    public void setInUser(String inUser) {
+        this.inUser = inUser;
+    }
+
+    public String getShopSupplier() {
+        return shopSupplier;
+    }
+
+    public void setShopSupplier(String shopSupplier) {
+        this.shopSupplier = shopSupplier;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Long getShopNumber() {
+        return shopNumber;
+    }
+
+    public void setShopNumber(Long shopNumber) {
+        this.shopNumber = shopNumber;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", shop=").append(shop);
-        sb.append(", shopType=").append(shopType);
-        sb.append(", quantity=").append(quantity);
-        sb.append(", speces=").append(speces);
-        sb.append(", depository=").append(depository);
-        sb.append(", address=").append(address);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", remark=").append(remark);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "CkmdStock{" +
+                "id=" + id +
+                ", shopName='" + shopName + '\'' +
+                ", shopType='" + shopType + '\'' +
+                ", shopPrice=" + shopPrice +
+                ", shopNumber=" + shopNumber +
+                ", priceTotal=" + priceTotal +
+                ", specs='" + specs + '\'' +
+                ", inUser='" + inUser + '\'' +
+                ", shopSupplier='" + shopSupplier + '\'' +
+                ", depository='" + depository + '\'' +
+                ", address='" + address + '\'' +
+                ", date=" + date +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

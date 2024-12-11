@@ -4,7 +4,7 @@
     <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
       :collapse="isCollapse" background-color="rgb(50, 65, 87)" text-color="#fff" active-text-color="#ffd04b">
 
-      <h3 style="color: #666fd2">{{ isCollapse ? '商品': '进销存管理系统' }}</h3>
+      <h3 style="color: #666fd2">{{ isCollapse ? '商品': '供应商自助管理系统' }}</h3>
 
       <!--   一级菜单
          clickMenu点击菜单事件   noChildren 只有一级菜单 -->

@@ -44,13 +44,13 @@ public class CkStockServiceImpl implements CkStockService {
 
     @Override
     public int create(CkmdStock stock) {
-        stock.setCreateTime(LocalDateTime.now());
+        stock.setDate(LocalDateTime.now());
         return stockMapper.insert(stock);
     }
 
     @Override
     public int update(CkmdStock stock) {
-        stock.setUpdateTime(LocalDateTime.now());
+        stock.setDate(LocalDateTime.now());
         return stockMapper.updateByPrimaryKeySelective(stock);
     }
 
@@ -181,8 +181,8 @@ public class CkStockServiceImpl implements CkStockService {
         //获取商品库存列表
         List<CkmdStock> stockList = stockMapper.selectByExample(new CkmdStockExample());
         for (CkmdStock stock : stockList) {
-            String shop = stock.getShop(); //商品名
-            Long quantity = stock.getQuantity(); //库存量
+            String shop = stock.getShopName(); //商品名
+            Long quantity = stock.getShopNumber(); //库存量
             BigDecimal bigDecimal = new BigDecimal(quantity);
             BigDecimal divideValue = bigDecimal.divide(bigKg, 0);   // 除后的
             if (10 > divideValue.signum()) {

@@ -19,6 +19,8 @@ public interface CkmdDepositoryOutMapper {
 
     List<CkmdDepositoryOut> selectByExample(CkmdDepositoryOutExample example);
 
+    List<CkmdDepositoryOut> selectH(CkmdDepositoryOutExample example);
+
     CkmdDepositoryOut selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") CkmdDepositoryOut row, @Param("example") CkmdDepositoryOutExample example);
@@ -28,4 +30,6 @@ public interface CkmdDepositoryOutMapper {
     int updateByPrimaryKeySelective(CkmdDepositoryOut row);
 
     int updateByPrimaryKey(CkmdDepositoryOut row);
+
+    int updateById(int id);
 }

@@ -41,4 +41,5 @@ public interface CkDepositoryInService {
     List<CkmdDepositoryIn> getRowInfoByPurchaseNumber(int number);
 
 
+
 }

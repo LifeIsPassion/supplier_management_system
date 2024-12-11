@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ import java.util.Map;
  * 部门  service
  */
 @Service
+@Transactional
 public class JxPurchaseServiceImpl implements JxPurchaseService {
 
     @Resource
@@ -38,6 +40,9 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
 
     @Resource
     private CkmdDepositoryInMapper depositoryInMapper;
+
+    @Resource
+    private JxmdPurchaseMapper jxmdPurchaseMapper;
 
     @Resource
     private CkmdDepositoryMapper depositoryMapper;
@@ -63,6 +68,7 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
         if (purchase.getStatus() == null) {
             purchase.setStatus(1); //状态默认进行中
         }
+        purchase.setIsIn(1); //未入库
         return purchaseMapper.insert(purchase);
     }
 
@@ -138,10 +144,10 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
         depositoryExample.createCriteria().andNameEqualTo(depositoryName);
         List<CkmdDepository> Depository = depositoryMapper.selectByExample(depositoryExample);
         CkmdDepository depository = Depository.get(0);
-        Long surplus = depository.getSurplus();   //获取仓库剩余容量
-        BigDecimal surplusBigDecimal = calculationUtils.INTCalculatingVolumeToWeight(surplus);  //仓库容量转质量
-        BigDecimal quantity = BigDecimal.valueOf(purchase.getQuantity()); //获取采购数量
-        if (surplusBigDecimal.compareTo(quantity) == -1) {   //仓库剩余容量小于采购量
+        BigDecimal surplus = BigDecimal.valueOf(depository.getSurplus());   //获取仓库剩余容量
+        //BigDecimal surplusBigDecimal = calculationUtils.INTCalculatingVolumeToWeight(surplus);  //仓库容量转质量
+        BigDecimal quantity = BigDecimal.valueOf(purchase.getShopSpace()); //获取采购数量
+        if (surplus.compareTo(quantity) == -1) {   //仓库剩余容量小于采购量
             return 2;
         }
 
@@ -156,6 +162,7 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
             CkmdDepositoryIn depositoryIn = new CkmdDepositoryIn();
             depositoryIn.setInId(Long.valueOf(purchase.getNumber()));  //采购id就是入库id
             depositoryIn.setDepository(depositoryName);   //入库仓库
+            depositoryIn.setSourceNumber(Integer.parseInt(purchase.getNumber()));
             depositoryIn.setShopName(purchase.getShop());  //入库商品
             depositoryIn.setShopPrice(purchase.getPrice()); //入库价格
             depositoryIn.setShopSupplier(purchase.getSupplier());  //供应商
@@ -164,9 +171,15 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
             depositoryIn.setSpecs(purchase.getSpecs());   //单位规格 斤 个 盒
             depositoryIn.setDate(LocalDateTime.now());  //入库日期
             depositoryIn.setInUser(userName); //入库人
-            depositoryIn.setIsInspection(0);  //是否质检  是
+            depositoryIn.setIsInspection(1);  //是否质检  否
             depositoryIn.setStatus(0);         //是否入库  是
             result = depositoryInMapper.insertSelective(depositoryIn);
+            //更新仓库容量
+            CkmdDepository ckmdDepository = new CkmdDepository();
+            ckmdDepository.setName(depositoryName);
+            Long su = Long.valueOf(String.valueOf(surplus.subtract(quantity)));
+            ckmdDepository.setSurplus(su);
+            depositoryMapper.updateByPrimaryKeySelective(ckmdDepository);
         }
         return result;
     }
@@ -202,8 +215,13 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
      */
     @Override
     public int checkAndExitGoods(JxmdPurchase purchase) {
+        int dpid = purchase.getId().intValue();
+        CkmdDepositoryIn ckmdDepositoryIn = depositoryInMapper.selectById1(dpid);
+        String number = String.valueOf(ckmdDepositoryIn.getSourceNumber());
+        purchase = jxmdPurchaseMapper.selectByNumber(number);
         Long id = purchase.getId(); //退货商品主键
         Integer status = purchase.getStatus();
+        Integer isIn = purchase.getIsIn();
         String checkNumber = purchase.getNumber(); //采购编号
         int flag = 0;
         /**
@@ -216,7 +234,8 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
 
         if (purchase != null) {
             JxmdPurchaseExit purchaseExit = new JxmdPurchaseExit();
-            purchaseExit.setExitNumber(String.valueOf(UUidUtils.uuid())); //设置退采编号uuid
+            String sud = String.valueOf(UUidUtils.uuid());
+            purchaseExit.setExitNumber(sud); //设置退采编号uuid
             purchaseExit.setNumber(purchase.getNumber());  //采购编号
             purchaseExit.setNum(Math.toIntExact(purchase.getQuantity()));   //采购数量
             purchaseExit.setPrice(purchase.getPrice());//采购价格
@@ -224,13 +243,13 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
             purchaseExit.setTime(LocalDateTime.now()); //退采日期
             purchaseExit.setReason(purchase.getRemark()); //退采原因
             purchaseExit.setSpecs(purchase.getSpecs());
-            if (status == 1) { // 进行中则表示未入库 可以直接设置退货
-                purchaseExit.setStatus(0);
-            } else {
+            if (status == 0 && isIn == 1) { // 完成但未入库
                 purchaseExit.setStatus(1);
             }
             int insert = purchaseExitMapper.insertSelective(purchaseExit);
-            flag += insert;
+            //删除采购清单
+            int delete = purchaseMapper.deleteByNumber(checkNumber);
+            //flag += insert;
             /**
              * 完成状态 即入库
              *  采购 编号------->入库清单  中含  采购编号
@@ -241,14 +260,24 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
              *   通过采购编号 查找对应的入库清单，并判断是否已经质检
              *   已质检： 需要 减少库存
              */
-            if (status == 0) {
-                int number = Integer.parseInt(purchase.getNumber()); //采购编号
+            if (status == 0 && isIn == 0) {
+                int inId = Integer.parseInt(purchase.getNumber()); //采购编号
                 //查找对应的入库清单
-                List<CkmdDepositoryIn> depositoryIn = depositoryInService.getRowInfoByPurchaseNumber(number);
+                CkmdDepositoryIn depositoryIn = depositoryInMapper.selectById(inId);
                 //获取源编号(采购编号)、以及仓库
-                CkmdDepositoryIn depositoryIn1 = depositoryIn.get(0);
-                Integer sourceNumber = depositoryIn1.getSourceNumber(); //获取源编号
-                String depository = depositoryIn1.getDepository();      //获取仓库名
+                Integer sourceNumber = depositoryIn.getSourceNumber(); //获取源编号
+                String depository = depositoryIn.getDepository();      //获取仓库名
+                CkmdDepository depositories = depositoryMapper.selectByName(depository);
+                Long depositoryId = depositoryIn.getId();
+                depositoryInService.delete(depositoryId); //删除入库清单
+                //更新仓库容量
+                CkmdDepository ckmdDepository = depositories;
+                ckmdDepository.setName(depository);
+                BigDecimal sur = BigDecimal.valueOf(ckmdDepository.getSurplus());
+                BigDecimal quantity = BigDecimal.valueOf(purchase.getShopSpace());
+                Long su = Long.valueOf(String.valueOf(sur.add(quantity)));
+                ckmdDepository.setSurplus(su);
+                depositoryMapper.updateByPrimaryKeySelective(ckmdDepository);
                 /**
                  * 生成出库清单
                  */
@@ -256,6 +285,8 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
                 depositoryOut.setOutId(Long.valueOf(UUidUtils.uuid()));  //设置出库uuid
                 depositoryOut.setSourceNumber(Long.valueOf(sourceNumber)); //设置源编号
                 depositoryOut.setDepository(depository);  //设置仓库
+                depositoryOut.setDate(purchase.getTime()); //采购单时间
+                depositoryOut.setShopNumber(purchase.getQuantity());//采购商品数量
                 depositoryOut.setShopName(purchase.getShop());  //设置商品
                 depositoryOut.setShopPrice(purchase.getPrice()); //设置价格
                 depositoryOut.setTotalPrice(purchase.getTotalPrice()); //设置总价
@@ -267,8 +298,106 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
                 depositoryOut.setStatus(1); // 审核后才能出库
                 depositoryOut.setOutInspection(1);  //默认需要审核
                 int i1 = depositoryOutMapper.insertSelective(depositoryOut);  //生成
-                flag += i1;
+                //flag += i1;
             }
+
+            //int end = purchaseMapper.deleteByPrimaryKey(purchase.getId());
+        }
+
+        return flag;
+    }
+
+    //商品出库
+
+    @Override
+    public int stockOut(JxmdPurchase purchase) {
+        int dpid = purchase.getId().intValue();
+        CkmdDepositoryIn ckmdDepositoryIn = depositoryInMapper.selectById1(dpid);
+        String number = String.valueOf(ckmdDepositoryIn.getSourceNumber());
+        purchase = jxmdPurchaseMapper.selectByNumber(number);
+        Long id = purchase.getId(); //退货商品主键
+        Integer status = purchase.getStatus();
+        Integer isIn = purchase.getIsIn();
+        String checkNumber = purchase.getNumber(); //采购编号
+        int flag = 0;
+        /**
+         * 防止重复生成退货 查看采购退货单是否已经存在
+         */
+        List<JxmdPurchaseExit> byField = purchaseExitDao.getByField(checkNumber);
+        if (byField != null && byField.size() != 0) {  //说明存在 已退货
+            return 0;  //
+        }
+
+        if (purchase != null) {
+//            JxmdPurchaseExit purchaseExit = new JxmdPurchaseExit();
+//            String sud = String.valueOf(UUidUtils.uuid());
+//            purchaseExit.setExitNumber(sud); //设置退采编号uuid
+//            purchaseExit.setNumber(purchase.getNumber());  //采购编号
+//            purchaseExit.setNum(Math.toIntExact(purchase.getQuantity()));   //采购数量
+//            purchaseExit.setPrice(purchase.getPrice());//采购价格
+//            purchaseExit.setTotalPrice(purchase.getTotalPrice()); //采购总价
+//            purchaseExit.setTime(LocalDateTime.now()); //退采日期
+//            purchaseExit.setReason(purchase.getRemark()); //退采原因
+//            purchaseExit.setSpecs(purchase.getSpecs());
+//            if (status == 0 && isIn == 1) { // 完成但未入库
+//                purchaseExit.setStatus(1);
+//            }
+//            int insert = purchaseExitMapper.insertSelective(purchaseExit);
+            //删除采购清单
+//            int delete = purchaseMapper.deleteByNumber(checkNumber);
+            //flag += insert;
+            /**
+             * 完成状态 即入库
+             *  采购 编号------->入库清单  中含  采购编号
+             *
+             * 生成 出库清单
+             *
+             *   0完成状态  表示已经入库
+             *   通过采购编号 查找对应的入库清单，并判断是否已经质检
+             *   已质检： 需要 减少库存
+             */
+            if (status == 0 && isIn == 0) {
+                int inId = Integer.parseInt(purchase.getNumber()); //采购编号
+                //查找对应的入库清单
+                CkmdDepositoryIn depositoryIn = depositoryInMapper.selectById(inId);
+                //获取源编号(采购编号)、以及仓库
+                Integer sourceNumber = depositoryIn.getSourceNumber(); //获取源编号
+                String depository = depositoryIn.getDepository();      //获取仓库名
+                CkmdDepository depositories = depositoryMapper.selectByName(depository);
+                Long depositoryId = depositoryIn.getId();
+                depositoryInService.delete(depositoryId); //删除入库清单
+                //更新仓库容量
+                CkmdDepository ckmdDepository = depositories;
+                ckmdDepository.setName(depository);
+                BigDecimal sur = BigDecimal.valueOf(ckmdDepository.getSurplus());
+                BigDecimal quantity = BigDecimal.valueOf(purchase.getShopSpace());
+                Long su = Long.valueOf(String.valueOf(sur.add(quantity)));
+                ckmdDepository.setSurplus(su);
+                depositoryMapper.updateByPrimaryKeySelective(ckmdDepository);
+                /**
+                 * 生成出库清单
+                 */
+                CkmdDepositoryOut depositoryOut = new CkmdDepositoryOut();
+                depositoryOut.setOutId(Long.valueOf(UUidUtils.uuid()));  //设置出库uuid
+                depositoryOut.setSourceNumber(Long.valueOf(sourceNumber)); //设置源编号
+                depositoryOut.setDepository(depository);  //设置仓库
+                depositoryOut.setDate(purchase.getTime()); //采购单时间
+                depositoryOut.setShopNumber(purchase.getQuantity());//采购商品数量
+                depositoryOut.setShopName(purchase.getShop());  //设置商品
+                depositoryOut.setShopPrice(purchase.getPrice()); //设置价格
+                depositoryOut.setTotalPrice(purchase.getTotalPrice()); //设置总价
+                depositoryOut.setSpecs(purchase.getSpecs());   //设置规格
+                depositoryOut.setCreateDate(LocalDateTime.now());  //设置创建时间
+                UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+                depositoryOut.setOutUser(token.getPrincipal().toString());// 设置出库人
+                depositoryOut.setShopSupplier(purchase.getSupplier());  //设置供应商
+                depositoryOut.setStatus(1); // 审核后才能出库
+                depositoryOut.setOutInspection(1);  //默认需要审核
+                int i1 = depositoryOutMapper.insertSelective(depositoryOut);  //生成
+                //flag += i1;
+            }
+
+            //int end = purchaseMapper.deleteByPrimaryKey(purchase.getId());
         }
 
         return flag;

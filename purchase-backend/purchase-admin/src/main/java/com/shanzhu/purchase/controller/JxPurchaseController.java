@@ -32,7 +32,7 @@ public class JxPurchaseController {
         if (count > 0) {
             return commonResult.success(count);
         }
-        return commonResult.success(count);
+        return commonResult.failed();
     }
 
     @ApiOperation("修改采购-合并到add")
@@ -84,7 +84,7 @@ public class JxPurchaseController {
      * @param
      * @return
      */
-    @ApiOperation("采购单完成后 入库")
+    @ApiOperation("采购单完成后入库")
     @RequestMapping(value = "/putStock", method = RequestMethod.POST)
     @ResponseBody
     public commonResult putStock(@RequestParam(value = "depositoryName", required = false) String depositoryName,
@@ -124,6 +124,18 @@ public class JxPurchaseController {
         if (count == 0) {  //已退货
             return commonResult.success(ResultCode.OVER_EXIT_GOODS.getCode(), ResultCode.OVER_EXIT_GOODS.getMessage());
         }
+        //有问题
+        return commonResult.success(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+    }
+
+    @ApiOperation("出库")
+    @RequestMapping(value = "/stockOut",method = RequestMethod.POST)
+    @ResponseBody
+    public commonResult stockOut(@RequestBody JxmdPurchase purchase) {
+        int count = purchaseService.stockOut(purchase);
+//        if (count == 0) {  //已退货
+//            return commonResult.success(ResultCode.OVER_EXIT_GOODS.getCode(), ResultCode.OVER_EXIT_GOODS.getMessage());
+//        }
         //有问题
         return commonResult.success(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }

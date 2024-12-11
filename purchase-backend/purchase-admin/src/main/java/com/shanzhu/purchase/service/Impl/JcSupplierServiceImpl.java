@@ -3,6 +3,8 @@ package com.shanzhu.purchase.service.Impl;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.shanzhu.purchase.mapper.JcmdSupplierMapper;
+import com.shanzhu.purchase.model.CkmdDepository;
+import com.shanzhu.purchase.model.CkmdDepositoryExample;
 import com.shanzhu.purchase.model.JcmdSupplier;
 import com.shanzhu.purchase.model.JcmdSupplierExample;
 import com.shanzhu.purchase.service.JcSupplierService;
@@ -86,4 +88,22 @@ public class JcSupplierServiceImpl implements JcSupplierService {
         return list;
     }
 
+    @Override
+    public List getSupplierToEchart(){
+        List<Map<String, String>> list = new ArrayList<>();
+        List<JcmdSupplier> suppliersList = supplierMapper.selectByExample(new JcmdSupplierExample());
+        if (suppliersList != null) {
+            for (JcmdSupplier jcmdSupplier : suppliersList) {
+                String province = jcmdSupplier.getProvince();
+                //String subAddress = address.substring(0, address.indexOf("/"));
+                if (province != null && !province.equals("")) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("name", province);
+                    map.put("value", String.valueOf(70));
+                    list.add(map);
+                }
+            }
+        }
+        return list;
+    }
 }

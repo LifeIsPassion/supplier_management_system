@@ -149,7 +149,7 @@ public class JxSaleServiceImpl implements JxSaleService {
         CkmdStock stock = stockList.get(0);
 
         //2 库存充足-----> 生成出库清单
-        if (stock != null && stock.getQuantity() >= saleList.getNum()) {
+        if (stock != null && stock.getShopNumber() >= saleList.getNum()) {
             CkmdDepositoryOut depositoryOut = new CkmdDepositoryOut();
             depositoryOut.setSourceNumber(Long.valueOf(saleList.getSaleNumber()));  //源 编号
             depositoryOut.setOutId(Long.valueOf(UUidUtils.uuid()));  //编号

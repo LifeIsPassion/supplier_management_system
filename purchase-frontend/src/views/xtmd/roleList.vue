@@ -20,7 +20,7 @@
           </el-table-column>
           <el-table-column prop="description" label="描述" width="100" show-overflow-tooltip>
           </el-table-column>
- 
+
           <el-table-column prop="status" label="状态" width="80">
             <template slot-scope="scope">
               <span>{{ scope.row.status == 0 ? '正常' : '停用' }}</span>
@@ -69,7 +69,7 @@
           </el-form-item>
 
           <el-form-item label="状态" label-width="120px" prop="status">
-            <template> 
+            <template>
               <el-select v-model="dataDialogForm.status" placeholder="请选择">
                 <el-option v-for="item in statusTwo" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
@@ -104,7 +104,7 @@
     </el-card>
   </div>
 </template>
- 
+
 
 <script>
 
@@ -146,7 +146,7 @@ export default {
       ],
 
       dataForm: { select: "", },
-      dataList: [],         //数据列表   
+      dataList: [],         //数据列表
       pageIndex: 1,         //初始页
       pageSize: 5,          //每页条数
       totalPage: 0,         //总条数
@@ -222,6 +222,7 @@ export default {
       });
     },
     //删除角色-----------------------------------
+
     handleDelete(index, item) {
       // 删除角色信息
       this.$confirm("此操作将永久该记录, 是否继续?", "提示", {
@@ -247,9 +248,9 @@ export default {
                   type: "success",
                   message: "删除成功!",
                 });
-              }        
-              this.dialogFormSubmitVisible = false;      
-                 this.pageIndex =1;   //未在第一页删除数据导致请求的是当前页      
+              }
+              this.dialogFormSubmitVisible = false;
+                 this.pageIndex =1;   //未在第一页删除数据导致请求的是当前页
                 this.getDataList();   // 刷新数据
             });
 
@@ -294,7 +295,7 @@ export default {
         // console.log("this.roleMenus:",this.roleMenus)
         this.dialogRoleFormVisible = true;
     },
- 
+
     //树形选中的数据 currentNode, selectedNodes
     handleChecked() {
       // console.log(currentNode, selectedNodes);
@@ -383,6 +384,5 @@ export default {
 }
 </script>
 <style></style>
-  
-  
-  
+
+

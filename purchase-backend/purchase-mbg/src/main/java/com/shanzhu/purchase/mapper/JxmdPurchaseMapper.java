@@ -13,6 +13,8 @@ public interface JxmdPurchaseMapper {
 
     int deleteByPrimaryKey(Long id);
 
+    int deleteByNumber(String number);
+
     int insert(JxmdPurchase row);
 
     int insertSelective(JxmdPurchase row);
@@ -20,6 +22,8 @@ public interface JxmdPurchaseMapper {
     List<JxmdPurchase> selectByExample(JxmdPurchaseExample example);
 
     JxmdPurchase selectByPrimaryKey(Long id);
+
+    JxmdPurchase selectByNumber(String number);
 
     int updateByExampleSelective(@Param("row") JxmdPurchase row, @Param("example") JxmdPurchaseExample example);
 

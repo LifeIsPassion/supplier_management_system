@@ -81,5 +81,16 @@ public class JcSupplierController {
         return commonResult.failed("数据为空");
     }
 
+    @ApiOperation("获取供应商省份")
+    @RequestMapping(value = "/getSupplierToEchart",method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<List> getSupplierToEChart() {
+        List list = supplierService.getSupplierToEchart();
+        if (list != null) {
+            return commonResult.success(list);
+        }
+        return commonResult.failed("数据为空");
+    }
+
 
 }

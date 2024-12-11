@@ -63,6 +63,18 @@ public class CkDepositoryOutController {
         List<CkmdDepositoryOut> outList = depositoryOutService.list(keyword, pageSize, pageNum);
         return commonResult.success(commonPage.restPage(outList));
     }
+    @ApiOperation("根据角色名称分页获取仓库列表")
+    @RequestMapping(value = "/listHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<commonPage<CkmdDepositoryOut>> listHistory(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
+    ) {
+        List<CkmdDepositoryOut> outList = depositoryOutService.listH(keyword, pageSize, pageNum);
+        return commonResult.success(commonPage.restPage(outList));
+    }
+
 
     @ApiOperation("修改仓库状态")
     @RequestMapping(value = "/updateStatus/{id}", method = RequestMethod.POST)

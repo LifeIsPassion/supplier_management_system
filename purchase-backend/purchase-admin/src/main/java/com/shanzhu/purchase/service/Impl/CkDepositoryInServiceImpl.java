@@ -65,7 +65,8 @@ public class CkDepositoryInServiceImpl implements CkDepositoryInService {
         if (!StrUtil.isEmpty(keyword)) {
             example.createCriteria().andShopNameLike("%" + keyword + "%");
         }
-        return depositoryInMapper.selectByExample(example);
+        //return depositoryInMapper.selectByExample(example);
+        return depositoryInMapper.selectAll();
     }
 
     @Override

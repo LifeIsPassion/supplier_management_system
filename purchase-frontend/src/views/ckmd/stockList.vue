@@ -16,34 +16,28 @@
         <el-table ref="multipleTable" :data="dataList" tooltip-effect="dark" style="width: 100%">
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column prop="id" label="Id" width="60">
+          <el-table-column prop="id" label="入库id" width="60">
           </el-table-column>
-          <el-table-column prop="shop" label="商品名称" width="80">
+          <el-table-column prop="shopName" label="商品名称" width="80">
           </el-table-column>
-          <el-table-column prop="shopType" label="所属类" width="80">
+          <el-table-column prop="shopNumber" label="库存" width="60">
           </el-table-column>
-          <el-table-column prop="quantity" label="库存" width="60">
-          </el-table-column>
-          <el-table-column prop="speces" label="计量单位" width="80">
+          <el-table-column prop="specs" label="计量单位" width="80">
           </el-table-column>
           <el-table-column prop="depository" label="存入仓库" width="100" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="170">
+          <el-table-column prop="date" label="创建时间" width="170">
             <template slot-scope="scope">
-              <span>{{scope.row.createTime ==null ? '': scope.row.createTime.replace("T"," ") }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="updateTime" label="修改时间" width="170">
-            <template slot-scope="scope">
-              <span>{{scope.row.updateTime ==null ? '': scope.row.updateTime.replace("T"," ") }}</span>
+              <span>{{scope.row.date ==null ? '': scope.row.date.replace("T"," ") }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" width="120" show-overflow-tooltip>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope" width="120">
-              <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+<!--              <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+<!--              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+              <el-button size="mini" type="primary" @click="stockOut(scope.$index, scope.row)">出库</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -54,7 +48,7 @@
       </div>
 
       <!-- Form -->
-      <el-dialog :title="dataDialogForm.id === 0 ? '新增商品库存' : '更新商品库存'" width="35%" :visible.sync="dialogFormVisible"
+      <el-dialog :title="dataDialogForm.id === 0 ? '新增商品库存' : '商品出库'" width="35%" :visible.sync="dialogFormVisible"
         @close="closeDialog()">
         <el-form :model="dataDialogForm" :rules="rules" ref="stockListForm">
 
@@ -136,7 +130,6 @@ export default {
       totalPage: 0,         //总条数
       dataListLoading: false,
 
-
       //编辑弹窗框
       dialogFormVisible: false,
       dialogFormSubmitVisible: false,
@@ -150,6 +143,7 @@ export default {
         address: "",
         remark: "",
       },
+      itemRowExitGoods:[],    //出库按钮行信息
       //验证
       rules: {
         //库存列表 如果有
@@ -191,7 +185,32 @@ export default {
         // console.log("选择的全部信息:",this.addressData)
       //  this.addtions.name = ''
       },
-
+    //出库
+    stockOut (index,item) {
+      this.itemRowExitGoods = item;
+      this.$confirm('是否确定出库?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post("/purchase/stockOut" , this.itemRowExitGoods).then((res) =>{
+          console.log("出库",res)
+          if (res.data.data ==200 ) {
+            this.$message({
+              type: "success",
+              message: "操作成功!",
+            });
+          }
+          if (res.data.data ==1002 ) {
+            this.$message({
+              type: "error",
+              message: res.data.message
+            });
+          }
+        });
+        this.getDataList();
+      })
+    },
     //编辑
     handleEdit(index, item) {
       this.dialogFormVisible = true;   // 打开更新的窗口

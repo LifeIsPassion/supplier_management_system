@@ -94,6 +94,15 @@ public class CkDepositoryOutServiceImpl implements CkDepositoryOutService {
         }
         return depositoryOutMapper.selectByExample(example);
     }
+    @Override
+    public List<CkmdDepositoryOut> listH(String keyword, Integer pageSize, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        CkmdDepositoryOutExample example = new CkmdDepositoryOutExample();
+        if (!StrUtil.isEmpty(keyword)) {
+            example.createCriteria().andShopNameLike("%" + keyword + "%");
+        }
+        return depositoryOutMapper.selectH(example);
+    }
 
     @Override
     public int addOrUpdateDepositoryOut(CkmdDepositoryOut depositoryOut) {
@@ -117,46 +126,49 @@ public class CkDepositoryOutServiceImpl implements CkDepositoryOutService {
      */
     @Override
     public int checkById(Long id) {
-        int result = 0;
-        if (id == null) return result;
-        CkmdDepositoryOut upDepositoryOut = new CkmdDepositoryOut();
-        CkmdDepositoryOut selectDepositoryOut = depositoryOutMapper.selectByPrimaryKey(id);  //原来的状态
-        String shopName = selectDepositoryOut.getShopName();  //商品名
-        String depositoryName = selectDepositoryOut.getDepository();  //获取仓库名
-        Long shopNumber = selectDepositoryOut.getShopNumber();   //获取出库的数量
-        Long sourceNumber = selectDepositoryOut.getSourceNumber(); //获取采购编号
-        List<CkmdStock> stockList = stockDao.getStockByTwoName(shopName, depositoryName);
-        CkmdStock stockCheck = stockList.get(0);
-        if (stockCheck != null) {
+//        int result = 0;
+//        if (id == null) return result;
+//        CkmdDepositoryOut upDepositoryOut = new CkmdDepositoryOut();
+//        CkmdDepositoryOut selectDepositoryOut = depositoryOutMapper.selectByPrimaryKey(id);  //原来的状态
+//        String shopName = selectDepositoryOut.getShopName();  //商品名
+//        String depositoryName = selectDepositoryOut.getDepository();  //获取仓库名
+//        Long shopNumber = selectDepositoryOut.getShopNumber();   //获取出库的数量
+//        Long sourceNumber = selectDepositoryOut.getSourceNumber(); //获取采购编号
+//        List<CkmdStock> stockList = stockDao.getStockByTwoName(shopName, depositoryName);
+//        CkmdStock stockCheck = stockList.get(0);
+//        if (stockCheck != null) {
+//
+//        }
+//        //如果库存少于需要出库的 直接返回
+//        if (stockCheck.getShopNumber() < shopNumber) {
+//            return result;
+//        }
+//
+//        if (selectDepositoryOut.getStatus() == 1) {  //原来还是未出库状态则设置 出库时间
+//            upDepositoryOut.setDate(LocalDateTime.now());
+//        }
+//        upDepositoryOut.setOutInspection(0);      //审核  状态
+//        upDepositoryOut.setStatus(0);            //出库   状态
+//        //更新的条件
+//        CkmdDepositoryOutExample depositoryOutExample = new CkmdDepositoryOutExample();
+//        depositoryOutExample.createCriteria().andIdEqualTo(id);
+//        result = depositoryOutMapper.updateByExampleSelective(upDepositoryOut, depositoryOutExample);
+//        //进行中且 更新完成
+//        if (selectDepositoryOut.getStatus() == 1 && result > 0) {
+//            //先查询采购退货是否有采购编号
+//            List<JxmdPurchaseExit> purchaseExitNumber = purchaseExitDao.selectNumber(sourceNumber);
+//            if (!ObjectUtil.isEmpty(purchaseExitNumber.get(0))) {  //空 true   ; 非空则执行
+//                JxmdPurchaseExitExample purchaseExitExample = new JxmdPurchaseExitExample();
+//                purchaseExitExample.createCriteria().andNumberEqualTo(String.valueOf(sourceNumber)); //采购退货编号
+//                JxmdPurchaseExit purchaseExit = new JxmdPurchaseExit();
+//                purchaseExit.setStatus(0);
+//                purchaseExit.setRemark("采购->入库->退购-->出库-->完成出库成功");   //工作流结合
+//                int i1 = purchaseExitMapper.updateByExampleSelective(purchaseExit, purchaseExitExample);
+//            }
+//        }
+        int iid = id.intValue();
+        int result = depositoryOutMapper.updateById(iid);
 
-        }
-        //如果库存少于需要出库的 直接返回
-        if (stockCheck.getQuantity() < shopNumber) {
-            return result;
-        }
-
-        if (selectDepositoryOut.getStatus() == 1) {  //原来还是未出库状态则设置 出库时间
-            upDepositoryOut.setDate(LocalDateTime.now());
-        }
-        upDepositoryOut.setOutInspection(0);      //审核  状态
-        upDepositoryOut.setStatus(0);            //出库   状态
-        //更新的条件
-        CkmdDepositoryOutExample depositoryOutExample = new CkmdDepositoryOutExample();
-        depositoryOutExample.createCriteria().andIdEqualTo(id);
-        result = depositoryOutMapper.updateByExampleSelective(upDepositoryOut, depositoryOutExample);
-        //进行中且 更新完成
-        if (selectDepositoryOut.getStatus() == 1 && result > 0) {
-            //先查询采购退货是否有采购编号
-            List<JxmdPurchaseExit> purchaseExitNumber = purchaseExitDao.selectNumber(sourceNumber);
-            if (!ObjectUtil.isEmpty(purchaseExitNumber.get(0))) {  //空 true   ; 非空则执行
-                JxmdPurchaseExitExample purchaseExitExample = new JxmdPurchaseExitExample();
-                purchaseExitExample.createCriteria().andNumberEqualTo(String.valueOf(sourceNumber)); //采购退货编号
-                JxmdPurchaseExit purchaseExit = new JxmdPurchaseExit();
-                purchaseExit.setStatus(0);
-                purchaseExit.setRemark("采购->入库->退购-->出库-->完成出库成功");   //工作流结合
-                int i1 = purchaseExitMapper.updateByExampleSelective(purchaseExit, purchaseExitExample);
-            }
-        }
         return result;
     }
 

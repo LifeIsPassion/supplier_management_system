@@ -24,14 +24,6 @@ export default {
             startAngle: 50, // 初始旋转角度
             //数据  商品
             dataShop: [
-                { name: "电脑", value: 20 },
-                { name: "苹果", value: 10 },
-                { value: 10, name: '香蕉' },
-                { value: 10, name: '平板' },
-                { value: 10, name: '扫描器' },
-                { value: 10, name: '衣柜' },
-                { value: 10, name: '鱼' },
-                { value: 10, name: '汽车' },
             ],
             dataShopAll: {},
 
@@ -114,7 +106,7 @@ ergodic(data){
 //    console.log(res);
    return res
 },
-        //-------------------------饼图获取库存数据 
+        //-------------------------饼图获取库存数据
         async dataShopStockMap() {
             this.$http.get("/stock/Pie").then((res) => {
                 //  console.log("大屏-饼图",  res.data.data)
@@ -280,7 +272,7 @@ ergodic(data){
                         fontSize: 5,
                         axisTick: { show: false },
                         //x族 进销存商品  shopName
-                        // data:      this.shopList    // this.histogramList.shopList      // this.shopList 
+                        // data:      this.shopList    // this.histogramList.shopList      // this.shopList
                         data: this.histogramList[0].shopList
                     }
                 ],

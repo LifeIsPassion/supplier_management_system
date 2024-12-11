@@ -72,8 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, shop, shop_type, quantity, speces, depository, address, create_time, update_time, 
-    remark
+    id, depository, shop_name, shop_price, shop_number, price_total, specs, date, in_user, shop_supplier
   </sql>
   <select id="selectByExample" parameterType="com.shanzhu.purchase.model.CkmdStockExample" resultMap="BaseResultMap">
     select
@@ -81,10 +80,11 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ckmd_stock
+    from ckmd_depository_in
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+    where is_inspection = 0
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>

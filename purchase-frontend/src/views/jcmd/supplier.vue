@@ -24,6 +24,8 @@
 					</el-table-column>
 					<el-table-column prop="address" label="地址" width="120" show-overflow-tooltip>
 					</el-table-column>
+          <el-table-column prop="province" label="具体城市" width="120" show-overflow-tooltip>
+          </el-table-column>
 					<el-table-column prop="branch" label="银行" width="120" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="createDate" label="创建时间" width="180">
@@ -67,8 +69,11 @@
 						<el-input v-model="dataDialogForm.phone" placeholder="供应商电话" style="width: 300px"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商地址" label-width="120px" prop="address">
-						<el-input v-model="dataDialogForm.address" placeholder="请输入供应商公司地址" style="width: 300px"></el-input>
+						<el-input v-model="dataDialogForm.address" placeholder="请输入供应商公司具体地址" style="width: 300px"></el-input>
 					</el-form-item>
+          <el-form-item label="供应商省份" label-width="120px" prop="province">
+            <el-input v-model="dataDialogForm.province" placeholder="请输入供应商所在城市" style="width: 300px"></el-input>
+          </el-form-item>
 					<el-form-item label="银行" label-width="120px" prop="branch">
 						<el-input v-model="dataDialogForm.branch" placeholder="银行" style="width: 300px"></el-input>
 					</el-form-item>
@@ -109,6 +114,7 @@ export default {
 				head: "",
 				phone: "",
 				address: "",
+        province: "",
 				branch: "",
 				//   branchNo: "",
 				remark: "",
@@ -171,6 +177,7 @@ export default {
 								head: "",
 								phone: "",
 								address: "",
+                province: "",
 								//    email: "",
 								//  fax: "",
 								branch: "",
@@ -225,15 +232,13 @@ export default {
 		openDialog() {
 			// 打开窗口
 			this.dialogFormVisible = true;
-			this.dataDialogForm.id = 0;  //用于后端判断是否为更新 
+			this.dataDialogForm.id = 0;  //用于后端判断是否为更新
 			this.dataDialogForm.supplierName = "";
-			this.dataDialogForm.head = "",
-				this.dataDialogForm.phone = "";
+			this.dataDialogForm.head = "";
+      this.dataDialogForm.phone = "";
 			this.dataDialogForm.address = "";
-			//  this.dataDialogForm.email = "";
-			//  this.dataDialogForm.fax = "";
+      this.dataDialogForm.province = "";
 			this.dataDialogForm.branch = "";
-			//  this.dataDialogForm.branchNo = "";
 			this.dataDialogForm.remark = "";
 		},
 		//关闭窗口
@@ -244,10 +249,8 @@ export default {
 				head: "",
 				phone: "",
 				address: "",
-				// email: "",
-				// fax: "",
+        province: "",
 				branch: "",
-				// branchNo: "",
 				remark: "",
 			};
 		},
@@ -255,7 +258,7 @@ export default {
 
 
 
-		//----------------------		
+		//----------------------
 		getDataList() {
 			if (this.dataListLoading) {
 				return;

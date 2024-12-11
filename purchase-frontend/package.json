@@ -1,7 +1,7 @@
 {
   "name": "purchase",
   "version": "1.0.0",
-  "description": "商品进销存管理系统",
+  "description": "供应商自助管理系统",
   "author": "ygy",
   "private": true,
   "scripts": {

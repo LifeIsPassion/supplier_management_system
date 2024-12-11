@@ -10,7 +10,7 @@ public class UUidUtils {
     public static Integer  uuid() {
         Integer uuid = UUID.randomUUID().toString().replaceAll("-", "").hashCode();
         uuid = uuid < 0 ? -uuid : uuid;//String.hashCode() 值会为空
-          uuid = Integer.valueOf(uuid.toString().substring(0,9));
+          uuid = Integer.valueOf(uuid.toString().substring(0,6));
         return  uuid;
     }
 
