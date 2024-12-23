@@ -19,6 +19,10 @@ public interface JcmdSupplierMapper {
 
     List<JcmdSupplier> selectByExample(JcmdSupplierExample example);
 
+    List<JcmdSupplier> selectByUsername(JcmdSupplierExample example);
+
+    List<JcmdSupplier> selectByExampleNo(JcmdSupplierExample example);
+
     JcmdSupplier selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") JcmdSupplier row, @Param("example") JcmdSupplierExample example);
@@ -28,4 +32,6 @@ public interface JcmdSupplierMapper {
     int updateByPrimaryKeySelective(JcmdSupplier row);
 
     int updateByPrimaryKey(JcmdSupplier row);
+
+    int updateStatusByPrimaryKey(Long id);
 }

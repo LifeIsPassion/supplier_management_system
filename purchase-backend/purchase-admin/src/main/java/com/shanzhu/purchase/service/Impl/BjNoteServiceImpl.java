@@ -51,7 +51,37 @@ public class BjNoteServiceImpl implements BjNoteService {
     }
 
     @Override
+    public List<BjmdNote> listSysByName(String keyword, Integer pageSize, Integer pageNum) {
+        //UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        //String username = token.getPrincipal().toString();
+        PageHelper.startPage(pageNum, pageSize);
+        BjmdNoteExample example = new BjmdNoteExample();
+        example.createCriteria().andTitleLike("%" + keyword + "%");
+
+        return noteMapper.selectSysByExampleWithBLOBs(example);
+    }
+
+    @Override
     public int createByTitle(String title) {
+        BjmdNoteExample bjmdNoteExample = new BjmdNoteExample();
+        List<BjmdNote> bjmdNotes = noteMapper.selectByExample(bjmdNoteExample);
+        int size = bjmdNotes.size();
+        if (size > 8) {
+            return 0;
+        }   //只能创建8条
+        BjmdNote note = new BjmdNote();
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String userName = token.getPrincipal().toString();
+        note.setCreateTime(LocalDateTime.now());  //
+        note.setUserName(userName);
+        note.setTitle(title);
+        note.setIsSys(1);
+
+        return noteMapper.insertSelective(note);
+    }
+
+    @Override
+    public int creatSysByTitle(String title) {
         BjmdNoteExample bjmdNoteExample = new BjmdNoteExample();
 
         List<BjmdNote> bjmdNotes = noteMapper.selectByExample(bjmdNoteExample);
@@ -66,6 +96,7 @@ public class BjNoteServiceImpl implements BjNoteService {
         note.setCreateTime(LocalDateTime.now());  //
         note.setUserName(userName);
         note.setTitle(title);
+        note.setIsSys(0);
 
         return noteMapper.insertSelective(note);
     }

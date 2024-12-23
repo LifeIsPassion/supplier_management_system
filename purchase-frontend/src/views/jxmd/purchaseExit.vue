@@ -223,7 +223,6 @@ export default {
                 id: 0,
                 number: "",
                 exitNumber: "",
-                exitNumber: "",
                 num: "",
                 price: "",
                 totalPrice: "",

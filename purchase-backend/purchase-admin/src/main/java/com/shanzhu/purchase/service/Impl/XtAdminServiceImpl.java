@@ -57,6 +57,22 @@ public class XtAdminServiceImpl implements XtAdminService {
     }
 
     @Override
+    public int sign(XtmdAdmin admin) {
+        String TempPwd = admin.getPassword();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String TempEncode = bCryptPasswordEncoder.encode(TempPwd);
+        admin.setPassword(TempEncode);
+        XtmdAdminRoleRelation relation = new XtmdAdminRoleRelation();
+        AdminMapper.insert(admin);
+        admin = AdminMapper.selectById(admin.getUserName());
+        Long id = Long.valueOf(admin.getId());
+        relation.setAdminId(id);
+        relation.setRoleId(8L);
+        adminRoleRelationMapper.insert(relation);
+        return id.intValue();
+    }
+
+    @Override
     public int update(XtmdAdmin admin) {
         //后期是否添加修改的时间
         return AdminMapper.updateByPrimaryKeySelective(admin);
@@ -174,6 +190,20 @@ public class XtAdminServiceImpl implements XtAdminService {
         }
         return AdminMapper.selectByExample(example);
     }
+
+    @Override
+    public XtmdAdmin getOne(String keyword, Integer pageSize, Integer pageNum,String userName) {
+        PageHelper.startPage(pageNum, pageSize);
+        XtmdAdminExample example = new XtmdAdminExample();
+        if (!StrUtil.isEmpty(keyword)) {
+            example.createCriteria().andUserNameLike("%" + keyword + "%");
+        }
+        return AdminMapper.selectById(userName);
+    }
+
+    /*获取某个用户数据
+
+     */
 
     /**
      * 用户名校验

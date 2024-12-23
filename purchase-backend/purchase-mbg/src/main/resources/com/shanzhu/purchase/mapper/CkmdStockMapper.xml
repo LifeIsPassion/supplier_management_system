@@ -89,6 +89,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -187,6 +188,12 @@
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+  </select>
+  <select id="selectALL" resultType="com.shanzhu.purchase.model.CkmdStock">
+    select shop_name,sum(shop_number) AS shop_number
+    from ckmd_depository_in
+    where is_inspection = 0
+    GROUP BY shop_name
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update ckmd_stock

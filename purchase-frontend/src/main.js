@@ -1,18 +1,24 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router';
-import element from 'element-ui' 
+import element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css' // 导入组件样式
 import store from '@/store';   //状态管理
- import * as echarts from 'echarts'; //引入echart
+// import geoJson from '@/components/china.json'
+// echarts.registerMap('china', geoJson);
+import * as echarts from 'echarts'; //引入echart
  Vue.prototype.$echarts = echarts
 import axios  from 'axios';
 
 Vue.config.productionTip = false
 Vue.use(element)  // 全局使用
- 
+
 Vue.prototype.$http = axios
 axios.defaults.baseURL="http://localhost:8086"
+// 将自动注册所有组件为全局组件
+// import dataV from '@jiaminghi/data-view'
+// Vue.use(dataV)
+
 // axios配置 拦截器
 axios.interceptors.request.use(config =>{
   var token =sessionStorage.getItem('token')
@@ -27,7 +33,7 @@ router.beforeEach((to, from, next) => {
   const username =sessionStorage.getItem('username')
   if(to.name !='Login' && !username) {
     next({name:'Login'})
-  }else{next() }  
+  }else{next() }
 })
 
  /* eslint-disable no-new */

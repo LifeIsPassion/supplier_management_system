@@ -76,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, supplier_name, head, phone, address, province, shop_name, branch, branch_account, supplier_proxy,
-    create_date, update_time, other
+    create_date, update_time, other, review_status
   </sql>
   <select id="selectByExample" parameterType="com.shanzhu.purchase.model.JcmdSupplierExample" resultMap="BaseResultMap">
     select
@@ -91,6 +91,7 @@
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
+    where review_status = 0
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -203,7 +204,36 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <select id="selectByExampleNo" resultType="com.shanzhu.purchase.model.JcmdSupplier">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from jcmd_supplier
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    where review_status = 1
+  </select>
+    <select id="selectByUsername" resultType="com.shanzhu.purchase.model.JcmdSupplier">
+      select
+      <if test="distinct">
+        distinct
+      </if>
+      <include refid="Base_Column_List" />
+      from jcmd_supplier
+      <if test="_parameter != null">
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null">
+        order by ${orderByClause}
+      </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update jcmd_supplier
     <set>
       <if test="row.id != null">
@@ -301,6 +331,9 @@
       <if test="other != null">
         other = #{other,jdbcType=VARCHAR},
       </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -319,4 +352,11 @@
       other = #{other,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updateStatusByPrimaryKey">
+    update jcmd_supplier
+    set review_status = 0
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
 </mapper>

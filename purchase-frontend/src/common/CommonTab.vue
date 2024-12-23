@@ -12,8 +12,8 @@
       {{ item.label }}
     </el-tag>
   </div>
- 
-   
+
+
 </template>
 <script>
 import { mapState, mapMutations } from "vuex";
@@ -46,7 +46,7 @@ export default {
             this.$router.push(this.tags[0]);
         },
     },
- 
+
 };
 </script>
 <style lang="less" scoped>

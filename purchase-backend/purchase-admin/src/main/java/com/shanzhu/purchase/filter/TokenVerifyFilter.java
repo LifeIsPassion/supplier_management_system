@@ -43,7 +43,7 @@ public class TokenVerifyFilter extends BasicAuthenticationFilter {
         List<String> msgs = Arrays.asList("/doc.html","/webjars","/v2","/v3",
                 "/favicon.ico","swagger-resources",
                 "/swagger-ui.html,","admin/login",
-                "swagger-ui.html","/META-INF/resources/"
+                "swagger-ui.html","/META-INF/resources/","/admin/signUp"
                 );
         for (String p : msgs) {
             if(path.contains(p)){

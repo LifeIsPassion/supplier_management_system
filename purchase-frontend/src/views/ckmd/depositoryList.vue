@@ -65,13 +65,13 @@
         @close="closeDialog()">
         <el-form :model="dataDialogForm" :rules="Rules" ref="ruleForm">
           <el-form-item label="仓库名称" label-width="120px" prop="name">
-            <el-input v-model="dataDialogForm.name" placeholder="仓库名称" style="width: 300px"></el-input>
+            <el-input v-model="dataDialogForm.name" placeholder="仓库名称" style="width: 200px"></el-input>
           </el-form-item>
 
           <el-form-item label="负责人" label-width="120px" prop="head">
             <template>
               <!-- label是显示的东西  value是对应选中的值 -->
-              <el-select style="width: 300px;" v-model="dataDialogForm.head" placeholder="请选择公司员工">
+              <el-select style="width: 200px;" v-model="dataDialogForm.head" placeholder="请选择公司员工">
                 <el-option v-for="item in adminAll"
                 :key="item.id" :label="'[' + item.id + '] '+ item.name"
                  :value="item.name">
@@ -81,7 +81,7 @@
           </el-form-item>
 
           <el-form-item label="电话" label-width="120px" prop="PropStorePhone">
-            <el-input v-model="dataDialogForm.storePhone" placeholder="电话" style="width: 300px"></el-input>
+            <el-input v-model="dataDialogForm.storePhone" placeholder="电话" style="width: 200px"></el-input>
           </el-form-item>
           <!-- 级联 -->
           <el-form-item label="地址" label-width="120px" prop="address">

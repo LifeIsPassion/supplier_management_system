@@ -19,6 +19,8 @@ public interface BjmdNoteMapper {
 
     List<BjmdNote> selectByExampleWithBLOBs(BjmdNoteExample example);
 
+    List<BjmdNote> selectSysByExampleWithBLOBs(BjmdNoteExample example);
+
     List<BjmdNote> selectByExample(BjmdNoteExample example);
 
     BjmdNote selectByPrimaryKey(Long id);

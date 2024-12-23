@@ -1,15 +1,26 @@
 <template>
   <div class="indexAll" >
 
-    <el-row :gutter="20">
+    <el-row :gutter="20" >
+      <el-col :span="8" class="el-col_6" >
+        <div class="grid-content  left">
+          <!-- 可视化大屏左侧 -->
+          <Left></Left>
+        </div>
 
-      <el-col :span="auto" class="el-col_14" >
+      </el-col>
+      <el-col :span="10" class="el-col_14">
         <div class="grid-content meddie">
           <!-- 可视化大屏 中间 -->
           <Meddie></Meddie>
         </div>
       </el-col>
 
+      <el-col :span="4">
+        <div class="grid-content right">
+          <Right></Right>
+        </div>
+      </el-col>
 
     </el-row>
   </div>
@@ -17,7 +28,11 @@
 
 <script>
 
+import Left from '@/views/supplier/supplierLeft.vue'
 import Meddie from '@/views/supplier/supplierScreen'
+import Right from '@/views/screen/indexRight'
+
+
 export default {
   name:'index',
   data() {
@@ -26,22 +41,34 @@ export default {
     }
   },
   components:{
-    //Left,
+    Left,
     Meddie,
-    //Right
+    Right
   }
 }
 </script>
 <style lang='less' scoped>
 .indexAll {
-  background-color: #080a20;
-  width: 1000vh;
+  margin-left: -25px;
+  margin-right: -40px;
+  margin-top: -20px;
+  margin-bottom: -20px;
+  width: 100vw; /* 宽度设置为视口宽度的100% */
+  height: 92vh; /* 高度设置为视口高度的100% */
+  background-image: url('../../assets/wallhaven-p97wgp.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
-
+.left{
+  padding-right: 1px;
+  //margin-right: 10px;
+  margin-left: 20px;
+}
 .meddie{
-  width: 10vh;
-  //height: 100vh;
-margin-right: -100px;
-  margin-left: 125px;
+  //margin-left: 5px;
 }
 </style>

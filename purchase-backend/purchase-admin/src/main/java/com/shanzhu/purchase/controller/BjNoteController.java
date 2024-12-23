@@ -46,6 +46,17 @@ public class BjNoteController {
         return commonResult.failed("系统暂时只能创建8条 ");
     }
 
+    @ApiOperation("创建通告，创建通告名")
+    @RequestMapping(value = "/createSysByTitle", method = RequestMethod.POST)
+    @ResponseBody
+    public commonResult createSysByTitle(String title) {
+        int result = noteService.creatSysByTitle(title);
+        if (result > 0) {
+            return commonResult.success(result);
+        }
+        return commonResult.failed("系统暂时只能创建8条 ");
+    }
+
     @ApiOperation("更新笔记")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -78,6 +89,18 @@ public class BjNoteController {
         List<BjmdNote> noteList = noteService.listByName(keyword, pageSize, pageNum);
         return commonResult.success(commonPage.restPage(noteList));
     }
+    @ApiOperation("分页查询公告")
+    @RequestMapping(value = "/listSysByName", method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<commonPage<BjmdNote>> listSysByName(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
+    ) {
+        List<BjmdNote> noteList = noteService.listSysByName(keyword, pageSize, pageNum);
+        return commonResult.success(commonPage.restPage(noteList));
+    }
+
 
     @ApiOperation("删除笔记")
     @RequestMapping(value = "/deleteById", method = RequestMethod.POST)

@@ -62,6 +62,16 @@ public class JcSupplierServiceImpl implements JcSupplierService {
     }
 
     @Override
+    public List<JcmdSupplier> listSupplier(String keyword, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        JcmdSupplierExample example = new JcmdSupplierExample();
+        if (!StrUtil.isEmpty(keyword)) {
+            example.createCriteria().andHeadLike("%" + keyword + "%");
+        }
+        return supplierMapper.selectByUsername(example);
+    }
+
+    @Override
     public List<JcmdSupplier> list(String keyword, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         JcmdSupplierExample example = new JcmdSupplierExample();
@@ -70,6 +80,16 @@ public class JcSupplierServiceImpl implements JcSupplierService {
         }
         return supplierMapper.selectByExample(example);
     }
+    @Override
+    public List<JcmdSupplier> listNoReview(String keyword, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        JcmdSupplierExample example = new JcmdSupplierExample();
+        if (!StrUtil.isEmpty(keyword)) {
+            example.createCriteria().andSupplierNameLike("%" + keyword + "%");
+        }
+        return supplierMapper.selectByExampleNo(example);
+    }
+
 
     @Override
     public List getNameAndAddress() {

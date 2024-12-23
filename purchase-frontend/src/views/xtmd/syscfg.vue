@@ -2,17 +2,17 @@
         <div>
                 <hr style=" border-color: #000000;">
                 <el-row>
-                        <el-col :span="12">
+                        <el-col :span="15">
                                 <!-- 第一行第一列 -->
                                 <el-card shadow="hover" class="box-card1 ">
-                                        <div class="welcome" style="color: lightcoral; font-size: 13px;">
-                                                <span> 欢迎使用商品进销存管理系统 </span> <br>
-                                                <span>&emsp;springboot,mybatis,SpringSecurity,mysql,vue <br>
-                                                        完善的认证授权</span>
+                                        <div class="welcome" style="color: lightcoral; font-size: 25px;">
+                                                <span> 欢迎使用供应商自助管理系统 </span> <br>
+                                                <span>系统基于springboot,mybatis,SpringSecurity,
+                                                  mysql,vue开发。致力于为企业提供高效，简洁的供应商自助管理</span>
                                         </div>
                                 </el-card>
                                 <el-card shadow="hover" class="box-card2 " style=" box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.0) ">
-                                        <span>当前的登陆用户是:</span>
+                                        <span>当前的登陆的权限用户是:</span>
                                         <span style="color: rgb(237, 24, 24); font-size: 20px;">{{ this.adminName }}</span>
                                 </el-card>
 

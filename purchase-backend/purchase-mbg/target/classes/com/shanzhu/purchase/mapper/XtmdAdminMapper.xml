@@ -225,6 +225,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+    <select id="selectById" resultType="com.shanzhu.purchase.model.XtmdAdmin">
+      select  *
+        from  xtmd_admin
+        where user_name = #{userName,jdbcType=VARCHAR}
+    </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update xtmd_admin
     <set>

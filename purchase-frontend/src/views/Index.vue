@@ -50,15 +50,31 @@ export default {
 <style lang='less' scoped>
 .indexAll {
     //  color: #ab2f2f;  //包括文字了
-    background-color: #080a20;
- //margin-left: 0%;
-  //  margin-top: 0%;
-//  height: auto;
-
+    //background-color: #080a20;
+ margin-left: -25px;
+  margin-right: -40px;
+  margin-top: -20px;
+  margin-bottom: -20px;
+  //margin-bottom: -20px;
+  //margin-top: 0%;
+  //height: 85vh;
+  //background-image: url('../assets/980.jpg');
+  /*width: 1920px;*/
+  /*height: 1080px;*/
+  width: 100vw; /* 宽度设置为视口宽度的100% */
+  height: 92vh; /* 高度设置为视口高度的100% */
+  background-image: url('../assets/wallhaven-p97wgp.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .left{
   padding-right: 1px;
-  margin-right: -10px;
+  //margin-right: 10px;
+  margin-left: 20px;
 }
 .meddie{
   //margin-left: 5px;

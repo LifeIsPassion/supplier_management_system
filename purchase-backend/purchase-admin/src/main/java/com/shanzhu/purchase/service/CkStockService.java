@@ -61,6 +61,7 @@ public interface CkStockService {
      */
     List<Map> histogramList();
 
+    List<Map> depositoryList();
 
     /**
      *  饼图

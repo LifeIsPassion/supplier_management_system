@@ -24,6 +24,13 @@ public interface XtAdminService {
     int create(XtmdAdmin XtmdAdmin);
 
     /**
+     * 注册
+     * @param admin
+     * @return
+     */
+    int sign(XtmdAdmin admin);
+
+    /**
      * 修改用户信息
      * @param  Admin
      * @return
@@ -46,6 +53,9 @@ public interface XtAdminService {
      * @return
      */
    List<XtmdAdmin> getAdminList(String keyword, Integer pageSize, Integer pageNum);
+
+    XtmdAdmin getOne(String keyword, Integer pageSize, Integer pageNum,String userName);
+
 
     boolean checkUserName(String userName);
 

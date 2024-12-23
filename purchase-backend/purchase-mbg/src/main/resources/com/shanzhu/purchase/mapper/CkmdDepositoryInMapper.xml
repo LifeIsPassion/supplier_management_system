@@ -239,7 +239,17 @@
   <select id="selectById1" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
     select *
     from ckmd_depository_in
+    where source_number = #{number,jdbcType=BIGINT}
+  </select>
+  <select id="selectById2" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
+    select *
+    from ckmd_depository_in
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllNo" resultType="com.shanzhu.purchase.model.CkmdDepositoryIn">
+    select *
+    from ckmd_depository_in
+    where is_inspection = 0
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update ckmd_depository_in

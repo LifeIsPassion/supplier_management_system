@@ -33,10 +33,22 @@ public interface BjNoteService {
     List<BjmdNote> listByName(String keyword, Integer pageSize, Integer pageNum);
 
     /**
+     * 获取公告
+     */
+    List<BjmdNote> listSysByName(String keyword, Integer pageSize, Integer pageNum);
+
+
+    /**
      * 创建新笔记
      *
      * @param title
      * @return
      */
     int createByTitle(String title);
+
+    /**
+     * 创建新通告
+     *
+     */
+    int creatSysByTitle(String title);
 }

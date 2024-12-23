@@ -32,9 +32,22 @@ public interface JcSupplierService {
     List<JcmdSupplier > list();
 
     /**
+     * 根据用户名获取供应商
+     */
+    List<JcmdSupplier> listSupplier(String keyword, Integer pageNum, Integer pageSize);
+
+
+    /**
      * 分页获取客户列表
      */
     List<JcmdSupplier> list(String keyword, Integer pageNum, Integer pageSize);
+
+    /**
+     * 分页获取未审核供应商列表
+     * @return
+     */
+    List<JcmdSupplier> listNoReview(String keyword, Integer pageNum, Integer pageSize);
+
 
     List<Map> getNameAndAddress();
 

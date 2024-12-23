@@ -57,11 +57,14 @@ export default {
         },
         echartMapInit() {
          var map = this.$echarts.init(this.$refs.echartCk);
+         // var imgData = '';
+         // var domImg = new Image();
+         // domImg.src = imgData;
             var optionMap={
-                backgroundColor: '#404a59',  //#04033a
-                backgroundColor: '#404a59',
+                // backgroundColor: '#404a59',  //#04033a
+                // backgroundColor: '#404a59',
                 title: {
-                    text: '全国仓库数量可视化地图',
+                    text: '仓库位置分布图',
                   //  subtext: 'data from https://www.haidilao.com/',
                   //  sublink: 'https://www.haidilao.com/',
                     left: 'center',
@@ -95,24 +98,38 @@ export default {
                     x: 'right',
                     data: ['haidilao'],
                     textStyle: {
-                        color: '#fff',
+                        color: '#004b75',
                     },
                 },
                 geo: {
                     map: 'china',
+                    aspectScale: 0.85,
+                    zoom: 1.2,
+                    top: '9%',//***********重点**********距离顶部的位置，每层向下一个百分比
+                    left: '11%',
+                    z: 5,
                     label: {
                         emphasis: {
                             show: false,
                         },
                     },
-                    roam: true,
+                    roam: false,
                     itemStyle: {
                         normal: {
-                            areaColor: '#323c48',
+                            // areaColor: '#323c48',
                             borderColor: '#111',
+                          areaColor:{
+                            // areaColor: '#004b75',
+                            borderColor: '#195175',
+                            borderWidth: 2,
+                            shadowColor: '#0f4c74',
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 4,
+                            shadowBlur: 10,
+                          },
                         },
                         emphasis: {
-                            areaColor: '#2a333d',
+                            areaColor: '#004b75',
                         },
                     },
                 },
@@ -136,7 +153,23 @@ export default {
                         },
                         itemStyle: {
                             normal: {
-                                color: '#ddb926',
+                                areaColor:{
+                                  // type:'image',
+                                  // image:domImg
+                                  normal: {
+                                    // areaColor: '#323c48',
+                                    borderColor: '#111',
+                                    areaColor:{
+                                      areaColor: '#004b75',
+                                      borderColor: '#195175',
+                                      borderWidth: 2,
+                                      shadowColor: '#0f4c74',
+                                      shadowOffsetX: 0,
+                                      shadowOffsetY: 4,
+                                      shadowBlur: 10,
+                                    },
+                                  },
+                                },
                             },
                         },
                     },

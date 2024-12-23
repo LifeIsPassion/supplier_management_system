@@ -74,7 +74,7 @@
           </el-form-item>
 
           <el-form-item label="部门" label-width="120px" prop="dept">
-            <template> 
+            <template>
               <el-select style="width: 300px;" v-model="dataDialogForm.dept" placeholder="请选择">
                 <el-option v-for="item in deptAll" :key="item.id" :label="'[' + item.id + '] ' + item.deptName"
                   :value="item.id">
@@ -150,7 +150,7 @@ export default {
         callback(new Error("请输入用户名"));
       }
       setTimeout(() => {
- 
+
         if (this.checkUserId === 0) {
           // console.log("获取value:", value);
           // 调用后端接口 检查 角色名称是否存在
@@ -188,7 +188,7 @@ export default {
 
     return {
       checkUserId: '',  //点击编辑后存储的id
- 
+
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -208,7 +208,7 @@ export default {
       dataForm: {
         select: "",
       },
-      dataList: [], //数据列表   
+      dataList: [], //数据列表
       pageIndex: 1,   //初始页
       pageSize: 5,        //每页条数
       totalPage: 0,         //总条数
@@ -448,7 +448,6 @@ export default {
           }
         })
       this.dialogAdminToRoleFormVisible = false;
-
     },
 
     getDeptAll() {    //获取所有部门
@@ -517,6 +516,5 @@ export default {
 }
 </script>
 <style></style>
-  
-  
-  
+
+

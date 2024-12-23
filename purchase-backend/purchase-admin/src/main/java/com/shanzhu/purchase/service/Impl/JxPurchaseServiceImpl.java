@@ -65,6 +65,7 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
         Long TotalPrice = 120l;  //不同属性的乘积问题
         purchase.setTotalPrice(BigDecimal.valueOf(TotalPrice));
         purchase.setIsDestroy(0);
+        purchase.setSendStatus(1);
         if (purchase.getStatus() == null) {
             purchase.setStatus(1); //状态默认进行中
         }
@@ -88,6 +89,36 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
     }
 
     @Override
+    public List<Map> listFive() {
+        List<JxmdPurchase> jxmdPurchaseList = purchaseMapper.selectFive();
+        List<Map> list = new ArrayList<>();
+        for (JxmdPurchase jxmdPurchase : jxmdPurchaseList){
+            HashMap<String,String> map = new HashMap<String, String>();
+            map.put("name",jxmdPurchase.getShop());
+            map.put("value",String.valueOf(jxmdPurchase.getQuantity()));
+            list.add(map);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Map> listFiveSuppiler() {
+        List<JxmdPurchase> jxmdPurchaseList = purchaseMapper.selectFivePurchase();
+        List<Map> list = new ArrayList<>();
+        List<String> shopList = new ArrayList<>();
+        List<Integer> integerList = new ArrayList<>();
+        Map<String,List> map = new HashMap<String, List>();
+        for (JxmdPurchase jxmdPurchase : jxmdPurchaseList){
+            shopList.add(jxmdPurchase.getSupplier());
+            integerList.add(jxmdPurchase.getQuantity().intValue());
+        }
+        map.put("shopList",shopList);
+        map.put("surplusList",integerList);
+        list.add(map);
+        return list;
+    }
+
+    @Override
     public List<JxmdPurchase> list(String keyword, Integer pageSize, Integer pageNum) {
         PageHelper.startPage(pageNum, pageSize);
         JxmdPurchaseExample example = new JxmdPurchaseExample();
@@ -97,6 +128,16 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
             c.andPurchaseUserLike("%" + keyword + "%");
         }
         return purchaseMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<JxmdPurchase> listOfHead(String keyword, Integer pageSize, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        JcmdSupplierExample jcmdSupplierExample = new JcmdSupplierExample();
+        if (!StrUtil.isEmpty(keyword)) {
+            jcmdSupplierExample.createCriteria().andHeadLike("%" + keyword + "%");
+        }
+        return purchaseMapper.selectByHead(jcmdSupplierExample);
     }
 
     @Override
@@ -110,6 +151,14 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
             res = this.create(purchase);
         }
         return res;
+    }
+
+    /*
+    商品发货
+     */
+    @Override
+    public int send(int id) {
+        return jxmdPurchaseMapper.updateSendStatusAndId(id);
     }
 
     /**
@@ -215,7 +264,7 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
      */
     @Override
     public int checkAndExitGoods(JxmdPurchase purchase) {
-        int dpid = purchase.getId().intValue();
+        int dpid = Integer.parseInt(purchase.getNumber());
         CkmdDepositoryIn ckmdDepositoryIn = depositoryInMapper.selectById1(dpid);
         String number = String.valueOf(ckmdDepositoryIn.getSourceNumber());
         purchase = jxmdPurchaseMapper.selectByNumber(number);
@@ -312,7 +361,7 @@ public class JxPurchaseServiceImpl implements JxPurchaseService {
     @Override
     public int stockOut(JxmdPurchase purchase) {
         int dpid = purchase.getId().intValue();
-        CkmdDepositoryIn ckmdDepositoryIn = depositoryInMapper.selectById1(dpid);
+        CkmdDepositoryIn ckmdDepositoryIn = depositoryInMapper.selectById2(dpid);
         String number = String.valueOf(ckmdDepositoryIn.getSourceNumber());
         purchase = jxmdPurchaseMapper.selectByNumber(number);
         Long id = purchase.getId(); //退货商品主键

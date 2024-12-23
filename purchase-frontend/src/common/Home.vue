@@ -12,18 +12,18 @@
         </el-header>
         <!-- 顶部的路由 -->
         <CommonTab></CommonTab>
-       
+
           <el-main class="main" >
               <!-- 路由的出口 -->
               <router-view ></router-view>
           </el-main>
-        
+
       </el-container>
     </el-container>
   </div>
 </template>
 
-  
+
 <script>
  import Aside from '@/common/Aside.vue'  //菜单
  import Header from '@/common/Header.vue' //顶部
@@ -38,19 +38,18 @@ export default {
     components: {
     Aside,
     Header,
-    CommonTab
+    // CommonTab
   }
 }
- 
+
 </script>
-  
+
 <style lang="less" scoped>
 .el-header {
-  padding: 0;
+  padding: 0px;
 }
 .main{
-  border-top: 12px;
- 
+  border-top: 10px;
+  padding: 0px;
 }
 </style>
-  

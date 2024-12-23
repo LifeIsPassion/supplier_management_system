@@ -1,5 +1,8 @@
 package com.shanzhu.purchase.model;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shanzhu.purchase.config.LocalDateTimeConverter;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -35,6 +38,8 @@ public class JxmdPurchase implements Serializable {
     private BigDecimal totalPrice;
 
     @ApiModelProperty(value = "采购时间")
+    @ExcelProperty(value = "采购时间", converter = LocalDateTimeConverter.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime time;
 
     @ApiModelProperty(value = "状态 0 完成 1进行中")
@@ -57,6 +62,12 @@ public class JxmdPurchase implements Serializable {
 
     @ApiModelProperty(value = "是否存在，退货后不显示，可增加查询按钮")
     private Integer isDestroy;
+
+    @ApiModelProperty(value = "发货地址")
+    private String takeAddress;
+
+    @ApiModelProperty(value = "发货状态")
+    private int sendStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -186,6 +197,22 @@ public class JxmdPurchase implements Serializable {
 
     public void setShopSpace(Long shopSpace) {
         this.shopSpace = shopSpace;
+    }
+
+    public String getTakeAddress() {
+        return takeAddress;
+    }
+
+    public void setTakeAddress(String takeAddress) {
+        this.takeAddress = takeAddress;
+    }
+
+    public int getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(int sendStatus) {
+        this.sendStatus = sendStatus;
     }
 
     @Override

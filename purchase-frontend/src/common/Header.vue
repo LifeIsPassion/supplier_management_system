@@ -1,8 +1,9 @@
 <template>
   <!-- 最上边 -->
-  <div class="header-container">
+  <div class="header-container" >
 
     <div class="l-content" @contextmenu.prevent="rightClick">
+      <el-button icon="el-icon-menu" size="medium" style="margin-left: 10px" @click="intoFont" >进入前台</el-button>
       <!-- 菜单收缩的图 button绑定一个点击事件（方法） -->
       <el-button icon="el-icon-menu" size="medium" style="margin-left: 15px" @click="handleMenu"></el-button>
       <!--  收缩图右边----的面包屑 -->
@@ -11,13 +12,15 @@
           {{ item.label }}
         </el-breadcrumb-item>
       </el-breadcrumb>
+      <!--进入前台-->
     </div>
+
 
     <!-- 右侧头像 -->
     <div class="r-content">
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
-           <img class="user_img" src="@/assets/logo.png" />
+           <img class="user_img" src="@/assets/wallhaven-p97wgp.png" />
         </span>
         <el-dropdown-menu slot="dropdown">
           <!-- <el-dropdown-item command="c">个人信息</el-dropdown-item> -->
@@ -102,7 +105,9 @@ export default {
     };
   },
   methods: {
-
+    intoFont () {
+      this.$router.push("/vr")
+    },
     rightClick () {
       // console.log("鼠标右击事件")
     },
@@ -198,7 +203,7 @@ export default {
 <style lang="less" scoped>
 .header-container {
   height: 60px;
-  background-color: #242f42;
+  background-color: rgb(62,114,144);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -219,6 +224,9 @@ export default {
       border-radius: 50%;
     }
   }
+  .r-content2 {
+    padding-left: -5px;
+  }
 
   .l-content {
     display: flex;
@@ -229,7 +237,7 @@ export default {
         font-weight: normal;
 
         &.is-link {
-          color: #666;
+          color: #fff;
         }
       }
 

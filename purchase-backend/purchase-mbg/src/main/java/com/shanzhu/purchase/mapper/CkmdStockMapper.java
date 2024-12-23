@@ -19,6 +19,8 @@ public interface CkmdStockMapper {
 
     List<CkmdStock> selectByExample(CkmdStockExample example);
 
+    List<CkmdStock> selectALL(CkmdStockExample example);
+
     CkmdStock selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") CkmdStock row, @Param("example") CkmdStockExample example);

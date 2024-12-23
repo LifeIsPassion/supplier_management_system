@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.shanzhu.purchase.constant.Constant;
 import com.shanzhu.purchase.model.XtmdAdmin;
 import com.shanzhu.purchase.util.JWTUtils;
+import com.shanzhu.purchase.util.LocalThreadUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         try {
             String loginInfo = getRequestJSON(request);
             Admin = JSON.parseObject(loginInfo, XtmdAdmin.class);  //转换对象
+            LocalThreadUtil.addCurrentUser(Admin);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(Admin.getUserName(), Admin.getPassword());
             return authenticationManager.authenticate(authenticationToken);
@@ -84,6 +86,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, String> map = new HashMap<>();
         //存放信息传给前端
         map.put("username", authResult.getName());   //username唯一的
+        map.put("name",LocalThreadUtil.getCurrentUser().getUserName());
         // 生成对应的Token信息
         String token = JWTUtils.getToken(map);
         // 需要把生成的Token信息响应给客户端

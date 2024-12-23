@@ -36,16 +36,23 @@
           </el-table-column>
           <el-table-column prop="totalPrice" label="总价" width="80">
           </el-table-column>
-          <el-table-column prop="shopSpace" label="商品占空间" width="80">
+          <el-table-column prop="shopSpace" label="占空间(单位：立方米)" width="80">
+          </el-table-column>
+          <el-table-column prop="takeAddress" label="收货地址" width="80">
           </el-table-column>
           <el-table-column prop="time" label="采购时间" width="180">
             <template slot-scope="scope">
               <span>{{ scope.row.time == null ? '' : scope.row.time.replace("T", " ") }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="80">
+          <el-table-column prop="status" label="采购状态" width="80">
             <template slot-scope="scope">
               <span>{{ scope.row.status == 0 ? '完成' : '进行中' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sendStatus" label="发货状态" width="80">
+            <template slot-scope="scope">
+              <span>{{ scope.row.sendStatus == 0 ? '完成' : '进行中' }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" width="120" show-overflow-tooltip>
@@ -78,7 +85,7 @@
           <el-form-item label="采购员工" label-width="120px" prop="purchaseUser">
             <template>
               <!-- label是显示的东西  value是对应选中的值 -->
-              <el-select style="width: 300px;" v-model="dataDialogForm.purchaseUser" placeholder="请选择公司员工">
+              <el-select style="width: 200px;" v-model="dataDialogForm.purchaseUser" placeholder="请选择公司员工">
                 <el-option v-for="item in adminAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
                   :value="item.name">
                 </el-option>
@@ -88,7 +95,7 @@
 
           <el-form-item label="采购商品" label-width="120px" prop="shop">
             <template>
-              <el-select style=" width: 300px;" v-model="dataDialogForm.shop" placeholder="请选择">
+              <el-select style=" width: 200px;" v-model="dataDialogForm.shop" placeholder="请选择">
                 <el-option v-for="item in shopAll" :key="item.id" :label="'[' + item.id + '] ' + item.name"
                   :value="item.name">
                 </el-option>
@@ -98,7 +105,7 @@
 
           <el-form-item label="所属类" label-width="120px" prop="parentId">
             <template>
-              <el-select style=" width: 300px;" v-model="dataDialogForm.shopType" placeholder="请选择">
+              <el-select style=" width: 200px;" v-model="dataDialogForm.shopType" placeholder="请选择">
                 <el-option v-for="item in shopTypeList" :key="item.id" :label="'[' + item.id + '] ' + item.shopType"
                   :value="item.shopType">
                 </el-option>
@@ -107,7 +114,7 @@
           </el-form-item>
 
           <el-form-item label="采购供应商" label-width="120px" prop="supplier">
-            <el-autocomplete style=" width: 300px;" popper-class="my-autocomplete" v-model="dataDialogForm.supplier"
+            <el-autocomplete style=" width: 200px;" popper-class="my-autocomplete" v-model="dataDialogForm.supplier"
               :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
               <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick">
               </i>
@@ -120,7 +127,7 @@
 
           <el-form-item label="规格" label-width="120px" prop="specs">
             <template>
-              <el-select style=" width: 300px;" v-model="dataDialogForm.specs" placeholder="请选择">
+              <el-select style=" width: 200px;" v-model="dataDialogForm.specs" placeholder="请选择">
                 <el-option v-for="item in specsList" :key="item.id" :label="'[' + item.id + '] ' + item.name"
                   :value="item.name">
                 </el-option>
@@ -129,13 +136,13 @@
           </el-form-item>
 
           <el-form-item label="采购数量" label-width="120px" prop="quantity">
-            <el-input v-model="dataDialogForm.quantity" placeholder="采购数量" style="width: 300px"></el-input>
+            <el-input v-model="dataDialogForm.quantity" placeholder="采购数量" style="width: 200px"></el-input>
           </el-form-item>
           <el-form-item label="采购单价" label-width="120px" prop="price">
-            <el-input v-model="dataDialogForm.price" placeholder="采购单价" style="width: 300px"></el-input>
+            <el-input v-model="dataDialogForm.price" placeholder="采购单价（单位：元）" style="width: 200px"></el-input>
           </el-form-item>
-          <el-form-item label="商品占用空间" label-width="120px" prop="shopSpace">
-            <el-input v-model="dataDialogForm.shopSpace" placeholder="商品占用空间" style="width: 300px"></el-input>
+          <el-form-item label="占用空间（单位：立方米）" label-width="120px" prop="shopSpace">
+            <el-input v-model="dataDialogForm.shopSpace" placeholder="商品占用空间" style="width: 200px"></el-input>
           </el-form-item>
 <!--          <el-form-item label="状态" label-width="120px" prop="status">-->
 <!--            <template>-->
@@ -146,6 +153,9 @@
 <!--              </el-select>-->
 <!--            </template>-->
 <!--          </el-form-item>-->
+          <el-form-item label="收货地址" label-width="120px" prop="takeAddress">
+            <el-input v-model="dataDialogForm.takeAddress" placeholder="收货地址" style="width: 200px"></el-input>
+          </el-form-item>
           <el-form-item label="备注" label-width="120px" prop="remark">
             <el-input type="textarea" v-model="dataDialogForm.remark" style="width: 300px"></el-input>
           </el-form-item>
@@ -253,6 +263,7 @@ export default {
         status: '',
         remark: '',
         shopSpace: '',
+        takeAddress: '',
       },
       itemRowPurchaseInfo: [],   //入库操作的每一行的采购信息
       itemRowExitGoods:[],    //退货按钮行信息
@@ -291,7 +302,8 @@ export default {
         this.dataDialogForm.price = '',
         this.dataDialogForm.shopSpace = '',
         this.dataDialogForm.status = '',
-        this.dataDialogForm.remark = '';
+        this.dataDialogForm.remark = '',
+      this.dataDialogForm.takeAddress = '';
     },
     //关闭窗口
     closeDialog() {
@@ -309,6 +321,7 @@ export default {
         specs: '',
         remark: '',
         shopSpace: '',
+        takeAddress: '',
       };
     },
 
@@ -337,6 +350,7 @@ export default {
       this.dataDialogForm.status = item.status;
       this.dataDialogForm.shopSpace = item.shopSpace;
       this.dataDialogForm.remark = item.remark;
+      this.dataDialogForm.takeAddress = item.takeAddress;
       // console.log(this.dataDialogForm);
     },
     //编辑-->确定提交  ruleFrom -->  formName
@@ -372,6 +386,7 @@ export default {
                 specs: '',
                 shopSpace: '',
                 remark: '',
+                takeAddress: '',
               };
               this.dialogFormSubmitVisible = false;
               // 刷新数据

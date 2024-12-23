@@ -1,7 +1,45 @@
 <template>
     <!-- 左侧 笔记  创建日期  -->
     <el-row :gutter="20">
-        <el-col :span="7">
+      <!--  查询 -->
+      <el-col :span="14">
+        <el-row>
+          <div style="margin-top:33px">
+            <el-input class="selectNote" v-model="dataForm.select" placeholder="请输入笔记名称" clearable></el-input>
+            <el-button type="primary" icon="el-icon-search" @click="getNoteDateList"
+                       style="margin-left: 5px;">查询</el-button>
+          </div>
+          <span style="margin-left:13px;">当前笔记名称</span>
+          <el-input class="Titledisabled" v-model="detail.title"></el-input>
+          <el-button type="primary" @click="submitNote()" style="margin-left:15px">保存</el-button>
+          <el-button type="primary" @click="createNote()" style="margin-left:15px">新建</el-button>
+
+          <!-- 富文本 -->
+          <div class="grid-content rightEditor">
+            <quill-editor class="ql-editor" v-model="detail.content" ref="myQuillEditor" :options="editorOption"
+                          @blur="onEditorBlur($event)" @focus="onEditorFocus($event)" @change="onEditorChange($event)">
+            </quill-editor>
+          </div>
+        </el-row>
+      </el-col>
+
+
+      <!-- 新建笔记------弹框 -->
+      <div>
+        <el-dialog title="请输入笔记名称" :visible.sync="dialogNoteFormVisible">
+          <el-form :model="tableNoteDialog">
+            <el-form-item label="笔记命名" label-width="200px">
+              <el-input v-model=" tableNoteDialog.title" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogNoteFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogNoteForm()">确 定</el-button>
+          </div>
+        </el-dialog>
+      </div>
+
+        <el-col :span="10">
             <div>
                 <div class="grid-content leftNote">
                     <el-table :data="tableNote" style="width: 100%; ">
@@ -25,47 +63,9 @@
 
             </div>
         </el-col>
-
-        <!--  查询 -->
-        <el-col :span="17">
-            <el-row>
-                <div style="margin-top:33px">
-                    <el-input class="selectNote" v-model="dataForm.select" placeholder="请输入笔记名称" clearable></el-input>
-                    <el-button type="primary" icon="el-icon-search" @click="getNoteDateList"
-                        style="margin-left: 5px;">查询</el-button>
-                </div>
-                <span style="margin-left:13px;">当前笔记名称</span>
-                <el-input class="Titledisabled" v-model="detail.title"></el-input>
-                <el-button type="primary" @click="submitNote()" style="margin-left:15px">保存</el-button>
-                <el-button type="primary" @click="createNote()" style="margin-left:15px">新建</el-button>
-
-                <!-- 富文本 -->
-                <div class="grid-content rightEditor">
-                    <quill-editor class="ql-editor" v-model="detail.content" ref="myQuillEditor" :options="editorOption"
-                        @blur="onEditorBlur($event)" @focus="onEditorFocus($event)" @change="onEditorChange($event)">
-                    </quill-editor>
-                </div>
-            </el-row>
-        </el-col>
-
-
-        <!-- 新建笔记------弹框 -->
-        <div>
-            <el-dialog title="请输入笔记名称" :visible.sync="dialogNoteFormVisible">
-                <el-form :model="tableNoteDialog">
-                    <el-form-item label="笔记命名" label-width="200px">
-                        <el-input v-model=" tableNoteDialog.title" autocomplete="off"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogNoteFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogNoteForm()">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div>
     </el-row>
 </template>
- 
+
 <script>
 import { quillEditor } from 'vue-quill-editor'
 
@@ -245,7 +245,7 @@ export default {
         createNote() {
             this.dialogNoteFormVisible = true;
         },
-        //dialog  新建笔记的 弹窗中的确定按钮 
+        //dialog  新建笔记的 弹窗中的确定按钮
         dialogNoteForm() {
             //请求参数封装   //每个用户只能创建8个笔记
             const title = this.tableNoteDialog.title;
@@ -276,7 +276,7 @@ export default {
               });
               return;
         }
-            });   
+            });
         },
 
         //删除笔记
@@ -305,7 +305,7 @@ export default {
     }
 }
 </script>
- 
+
 <style lang='less' scoped>
 .el-row {
     margin-top: 0px;

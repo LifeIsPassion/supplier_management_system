@@ -94,7 +94,7 @@
       <el-dialog title="角色权限分配" width="35%" :visible.sync="dialogRoleFormVisible" >
         <!--  expanded 默认展开 按钮 @checked 默认勾选    ||:default-expanded-keys="[2, 3]"    -->
         <el-tree style="padding-left:45px;" :data="roleMenus.treeData" ref="treeMenu" show-checkbox node-key="id" @check="handleChecked"
-          :default-checked-keys="roleMenus.menuIds">
+          :default-checked-keys="roleMenus.menuIds"  check-strictly="checkStrictly">
         </el-tree>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogRoleFormVisible = false">取 消</el-button>

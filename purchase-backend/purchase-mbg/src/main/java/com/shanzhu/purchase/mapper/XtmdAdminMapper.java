@@ -19,6 +19,10 @@ public interface XtmdAdminMapper {
 
     List<XtmdAdmin> selectByExample(XtmdAdminExample example);
 
+    XtmdAdmin selectById(String userName);
+
+
+
     XtmdAdmin selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") XtmdAdmin row, @Param("example") XtmdAdminExample example);

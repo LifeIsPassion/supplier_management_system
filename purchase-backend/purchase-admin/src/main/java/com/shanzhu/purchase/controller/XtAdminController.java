@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +67,37 @@ public class XtAdminController {
         return commonResult.success(commonPage.restPage(adminList));
     }
 
+    @ApiOperation(value = "获取某个用户的信息")
+    @RequestMapping(value = "/getOne",method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<commonPage<XtmdAdmin>> getOne(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+            @RequestParam(value = "userName") String userName
+    ) {
+        XtmdAdmin adminList = AdminService.getOne(keyword, pageSize, pageNum,userName);
+        List<XtmdAdmin> list = new ArrayList<>();
+        list.add(adminList);
+        return commonResult.success(commonPage.restPage(list));
+    }
+
     @ApiOperation(value = "添加用户")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public commonResult create(@RequestBody XtmdAdmin admin) {
         int count = AdminService.updateOrAddById(admin);
+        if (count > 0) {
+            return commonResult.success("成功");
+        }
+        return commonResult.failed();
+    }
+
+    @ApiOperation(value = "注册")
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    @ResponseBody
+    public commonResult signUp(@RequestBody XtmdAdmin admin) {
+        int count = AdminService.sign(admin);
         if (count > 0) {
             return commonResult.success("成功");
         }

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -24,11 +26,32 @@ public class JxPurchaseController {
     @Resource
     private JxPurchaseService purchaseService;
 
+    @RequestMapping(value = "export",method = RequestMethod.GET)
+    public void export(HttpServletResponse response) throws IOException {
+        int a = 1;
+    }
+    @ApiOperation("测试")
+    @RequestMapping(value = "/test",method = RequestMethod.POST)
+    @ResponseBody
+    public void test(){
+        int a = 1;
+    }
+
     @ApiOperation("添加采购单")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public commonResult create(@RequestBody JxmdPurchase purchase) {
         int count = purchaseService.addOrUpdate(purchase);
+        if (count > 0) {
+            return commonResult.success(count);
+        }
+        return commonResult.failed();
+    }
+    @ApiOperation("商品发货")
+    @RequestMapping(value = "/send", method = RequestMethod.POST)
+    @ResponseBody
+    public commonResult send(@RequestBody JxmdPurchase purchase) {
+        int count = purchaseService.send(purchase.getId().intValue());
         if (count > 0) {
             return commonResult.success(count);
         }
@@ -65,6 +88,22 @@ public class JxPurchaseController {
         return commonResult.success(customerList);
     }
 
+    @ApiOperation("获取采购数量前五商品")
+    @RequestMapping(value = "/listFive",method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<List> listFive() {
+        List map = purchaseService.listFive();
+        return commonResult.success(map);
+    }
+    @ApiOperation("获取采购数量前五采购商")
+    @RequestMapping(value = "/listFiveSuppiler",method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<List> listFiveSuppiler() {
+        List map = purchaseService.listFiveSuppiler();
+        return commonResult.success(map);
+    }
+
+
     @ApiOperation("根据采购人 获取 ")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -74,6 +113,18 @@ public class JxPurchaseController {
             @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
     ) {
         List<JxmdPurchase> customerList = purchaseService.list(keyword, pageSize, pageNum);
+        return commonResult.success(commonPage.restPage(customerList));
+    }
+
+    @ApiOperation("根据负责人 获取 ")
+    @RequestMapping(value = "/listHead", method = RequestMethod.GET)
+    @ResponseBody
+    public commonResult<commonPage<JxmdPurchase>> listHead(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
+    ) {
+        List<JxmdPurchase> customerList = purchaseService.listOfHead(keyword, pageSize, pageNum);
         return commonResult.success(commonPage.restPage(customerList));
     }
 

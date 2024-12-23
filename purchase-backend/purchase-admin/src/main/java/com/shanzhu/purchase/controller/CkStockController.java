@@ -1,5 +1,7 @@
 package com.shanzhu.purchase.controller;
 
+import com.shanzhu.purchase.model.CkmdDepository;
+import com.shanzhu.purchase.model.CkmdDepositoryExample;
 import com.shanzhu.purchase.model.CkmdStock;
 import com.shanzhu.purchase.service.CkStockService;
 import com.shanzhu.purchase.util.commonPage;
@@ -74,12 +76,11 @@ public class CkStockController {
         return commonResult.success(commonPage.restPage(menuList));
     }
 
-    @ApiOperation("柱状图-库存列表-仓库集合的")
+    @ApiOperation("柱状图-库存列表-仓库剩余容量")
     @RequestMapping(value = "/histogramList", method = RequestMethod.GET)
     @ResponseBody
     public commonResult<List> histogramList() {
-        List<Map> histogramList = stockService.histogramList();
-
+        List<Map> histogramList = stockService.depositoryList();
         return commonResult.success(histogramList);
     }
 

@@ -13,6 +13,39 @@ export default new Router({
         name: 'Login',
         hidden: true
     },
+   // {
+   //   path:'/index',
+   //   component: () => import('@/views/Index.vue'),
+   //   name:'Index',
+   //   hidden: true
+   // },
+   {
+     path: '/vr',
+     name: 'HomeVr',
+     component: () => import('@/common/HomeVr.vue'),
+     redirect:'index',
+     //  iconCls: 'el-icon-menu',
+     children: [
+       {
+         path: '/index',
+         name: 'Index',
+         component:() =>import('@/views/Index.vue'),
+       }
+     ]
+   },
+
+   {
+     path:'/vs',
+     name: 'HomeVr',
+     component: () => import('@/common/HomeVr.vue'),
+     redirect:'supplierShow',
+     children: [
+       { path: '/supplierShow', name: '供应商信息',
+         component: () => import('@/views/supplier/supplierShow.vue'),
+       }
+     ]
+   },
+
     {
         path: '/404',
         component:() => import('@/common/404.vue'),
@@ -24,13 +57,13 @@ export default new Router({
         path: '/',
         name: 'Home',
         component: () => import('@/common/Home.vue'),
-        redirect:'index',
-      //  iconCls: 'el-icon-menu',
+        redirect:'Into',
+       iconCls: 'el-icon-menu',
         children: [
             {
-            path: '/index',
-            name: 'Index',
-            component:() =>import('@/views/Index.vue'),
+            path: '/Into',
+            name: 'Into',
+            component:() =>import('@/common/Into.vue'),
              }
         ]
     },
@@ -45,6 +78,65 @@ export default new Router({
      children: [
        { path: '/supplierShow', name: '供应商信息',
          component: () => import('@/views/supplier/supplierShow.vue'),
+       }
+     ]
+   },
+   {
+     path:'/',
+     component: Home,
+     name: '供应商管理',
+     iconCls: 'el-icon-menu',
+     leaf: true,
+     children: [
+       { path: '/supplierManage', name: '供应商资料审核',
+         component: () => import('@/views/jcmd/supplierManage.vue'),
+       },
+       { path: '/supplierApp', name: '供应商资格申请',
+         component: () => import('@/views/jcmd/supplierApp.vue'),
+       },
+       { path: '/supplierPurchase', name: '供应商订单管理',
+         component: () => import('@/views/jcmd/supplierPurchase.vue'),
+       },
+     ]
+   },
+
+   {
+     path:'/',
+     component: Home,
+     name: '系统公告',
+     iconCls: 'el-icon-menu',
+     leaf: true,
+     children: [
+       { path: '/systemNoticeLook', name: '查看公告',
+         component: () => import('@/views/xtn/systemNoticeLook.vue'),
+       },
+       { path: '/systemNoticePush', name: '发表公告',
+         component: () => import('@/views/xtn/systemNoticePush.vue'),
+       },
+     ]
+   },
+
+   {
+     path:'/',
+     component: Home,
+     name: '笔记',
+     iconCls: 'el-icon-menu',
+     leaf: true,
+     children: [
+       { path: '/note', name: '笔记',
+         component: () => import('@/views/bjmd/note.vue'),
+       }
+     ]
+   },
+   {
+     path:'/',
+     component: Home,
+     name: '导出信息',
+     iconCls: 'el-icon-menu',
+     leaf: true,
+     children: [
+       { path: '/dcData', name: '导出信息',
+         component: () => import('@/views/dcmd/dcData.vue'),
        }
      ]
    },
@@ -68,7 +160,7 @@ export default new Router({
               },
               { path: '/supplier', name: '供应商资料',
               component: () => import('@/views/jcmd/supplier.vue'),
-              }
+              },
         ]
     },
 
@@ -141,9 +233,14 @@ export default new Router({
            },
            {  path: '/syscfg', name: '系统配置管理',
               component: () => import('@/views/xtmd/syscfg.vue')
-            }
+            },
+          {
+            path: '/personData',name: '个人信息',
+            component: () => import('@/views/xtmd/personData.vue')
+          }
         ]
     },
+
     {
         path: '*',
         hidden: true,

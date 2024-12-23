@@ -43,6 +43,11 @@
               <span>{{ scope.row.time == null ? '' : scope.row.time.replace("T", " ") }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="sendStatus" label="发货状态" width="80">
+            <template slot-scope="scope">
+              <span>{{ scope.row.sendStatus == 0 ? '已发货' : '未发货' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="status" label="采购状态" width="80">
             <template slot-scope="scope">
               <span>{{ scope.row.status == 0 ? '已完成采购' : '进行中' }}</span>

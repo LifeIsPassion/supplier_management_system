@@ -54,12 +54,12 @@
 			@close="closeDialog()">
 			<el-form :model="dataDialogForm" :rules="rules" ref="customerForm">
 				<el-form-item label="商品名称" label-width="120px" prop="name">
-					<el-input v-model="dataDialogForm.name" placeholder="商品名称" style="width: 300px"></el-input>
+					<el-input v-model="dataDialogForm.name" placeholder="商品名称" style="width: 200px"></el-input>
 				</el-form-item>
 
 				<el-form-item label="所属类" label-width="120px" prop="parentId">
  					<template>
-						<el-select style="width: 300px;" v-model="dataDialogForm.parentId" placeholder="请选择">
+						<el-select style="width: 200px;" v-model="dataDialogForm.parentId" placeholder="请选择">
 							<el-option v-for="item in shopTypeList" :key="item.id" :label="'[' + item.id + '] ' + item.shopType"
 								:value="item.id">
 							</el-option>
@@ -68,7 +68,7 @@
 				</el-form-item>
 				<el-form-item label="规格" label-width="120px" prop="specs">
             <template>
-              <el-select style=" width: 300px;" v-model="dataDialogForm.specs" placeholder="请选择">
+              <el-select style=" width: 200px;" v-model="dataDialogForm.specs" placeholder="请选择">
                 <el-option v-for="item in specsList" :key="item.id" :label="'[' + item.id + '] ' + item.name"
                   :value="item.name">
                 </el-option>
@@ -76,11 +76,11 @@
             </template>
           </el-form-item>
 
-				<el-form-item label="市场价格" label-width="120px" prop="marketPrice">
-					<el-input v-model="dataDialogForm.marketPrice" placeholder="市场价格" style="width: 300px"></el-input>
+				<el-form-item label="价格(单位：元)" label-width="120px" prop="marketPrice">
+					<el-input v-model="dataDialogForm.marketPrice" placeholder="市场价格" style="width: 200px"></el-input>
 				</el-form-item>
 				<el-form-item label="描述信息" label-width="120px" prop="remark">
-					<el-input type="textarea" v-model="dataDialogForm.remark" style="width: 300px"></el-input>
+					<el-input type="textarea" v-model="dataDialogForm.remark" style="width: 200px"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

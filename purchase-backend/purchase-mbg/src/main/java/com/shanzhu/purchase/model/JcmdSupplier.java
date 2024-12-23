@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class JcmdSupplier implements Serializable {
+public class JcmdSupplier<z> implements Serializable {
     @ApiModelProperty(value = "id")
     private Long id;
 
@@ -42,7 +42,10 @@ public class JcmdSupplier implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "其他")
+    @ApiModelProperty(value = "供应审核状态")
+    private Long reviewStatus;
+
+   @ApiModelProperty(value = "其他")
     private String other;
 
     private static final long serialVersionUID = 1L;
@@ -150,6 +153,16 @@ public class JcmdSupplier implements Serializable {
     public void setProvince(String province) {
         this.province = province;
     }
+
+    public Long getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(Long reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+
 
     @Override
     public String toString() {

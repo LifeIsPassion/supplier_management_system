@@ -29,10 +29,8 @@ export default {
 
             // ----------------------------------柱状图数据
       histogramList: {
-            saleList: [],
-            shopList: [],
-            purchaseList: [],
-            stockList: [],
+        surplusList: [],
+        shopList: [],
             },
             //柱状图样式设置
             labelOption: {
@@ -127,10 +125,9 @@ ergodic(data){
                 },
                 //中间圆圈大小以及位置
                 title: {
-                    text: '库存',
-                    subtext: '占比',
-                    x: '19%',
-                    y: '36%',
+                    text: '库存数量',
+                    x: '25%',
+                    y: '45%',
                     textStyle: {
                         fontSize: 20,
                         fontWeight: 'normal',
@@ -145,8 +142,8 @@ ergodic(data){
                 //圆圈大小
                 series: [{
                     type: 'pie',
-                    radius: ['90', '60'],
-                    center: ['23%', '43%'],
+                    radius: ['100', '60'],
+                    center: ['32%', '50%'],
                     color: ['rgb(255,183,112)', 'rgb(255,162,70)', 'rgb(254,130,8)', 'rgb(125,235,255)', 'rgb(77,194,255)', 'rgb(50,185,255)', 'rgb(24,176,255)', 'rgb(1,155,255)', 'rgb(39,115,254)', 'rgb(39,93,254)'],
                     itemStyle: {
                         normal: {
@@ -238,10 +235,6 @@ ergodic(data){
 
         //左下角柱状图
         echartColumnarInit() {
-            //  console.log("商品list",this.histogramList[0].shopName);
-            //  console.log("销售list",this.histogramList[0].saleList);
-            //  console.log("库存list",this.histogramList[0].stockList);
-            //  console.log("采购list",this.histogramList[0].purchaseList);
             var chart2 = this.$echarts.init(this.$refs.ColumnarLeft);
             var option2 = {
                 tooltip: {
@@ -251,7 +244,7 @@ ergodic(data){
                     }
                 },
                 legend: {
-                    data: ['采购量', '销售量', '库存量']  //不用改
+                    data: ['剩余容量']  //不用改
                 },
                 toolbox: {
                     show: true,
@@ -273,7 +266,15 @@ ergodic(data){
                         axisTick: { show: false },
                         //x族 进销存商品  shopName
                         // data:      this.shopList    // this.histogramList.shopList      // this.shopList
-                        data: this.histogramList[0].shopList
+                        data: this.histogramList[0].shopList,
+                        axisLabel: {         //interval设置成 0 强制显示所有标签
+                        interval: 0,
+                        rotate: 30,     //可以通过旋转解决标签显示不下的问题
+                            show: true,
+                            textStyle: {
+                              color: "#fff",
+                            }
+                      },
                     }
                 ],
                 yAxis: [
@@ -283,7 +284,7 @@ ergodic(data){
                 ],
                 series: [
                     {
-                        name: '采购量',
+                        name: '剩余容量',
                         type: 'bar',
                         barWidth: '13%',
                         barGap: 0,
@@ -291,32 +292,9 @@ ergodic(data){
                         emphasis: {
                             focus: 'series'
                         },
+                      color: '#317ec2',
                         //采购的数据
-                        data: this.histogramList[0].purchaseList
-                        //   data:   [320, 332, 301, 334, 390]
-                    },
-
-                    {
-                        name: '销售量',
-                        type: 'bar',
-                        barWidth: '13%',
-                        label: this.labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.histogramList[0].saleList // [220, 182, 191, 234, 290]
-                        //  data:   [220, 182, 191, 234, 290]
-                    },
-                    {
-                        name: '库存量',
-                        type: 'bar',
-                        barWidth: '13%',
-                        label: this.labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.histogramList[0].stockList // [150, 232, 201, 154, 190]
-                        //  data:   [150, 232, 201, 154, 190]
+                        data: this.histogramList[0].surplusList
                     },
                 ]
 

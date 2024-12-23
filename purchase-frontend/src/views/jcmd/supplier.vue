@@ -60,25 +60,25 @@
 				@close="closeDialog()">
 				<el-form :model="dataDialogForm" :rules="rules" ref="supplierForm">
 					<el-form-item label="供应商名称" label-width="120px" prop="supplierName">
-						<el-input v-model="dataDialogForm.supplierName" placeholder="供应商名称" style="width: 300px"></el-input>
+						<el-input v-model="dataDialogForm.supplierName" placeholder="供应商名称" style="width: 200px"></el-input>
 					</el-form-item>
 					<el-form-item label="负责人" label-width="120px" prop="head">
-						<el-input v-model="dataDialogForm.head" placeholder="负责人" style="width: 300px"></el-input>
+						<el-input v-model="dataDialogForm.head" placeholder="负责人" style="width: 200px"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商电话" label-width="120px" prop="phone">
-						<el-input v-model="dataDialogForm.phone" placeholder="供应商电话" style="width: 300px"></el-input>
+						<el-input v-model="dataDialogForm.phone" placeholder="供应商电话" style="width: 200px"></el-input>
 					</el-form-item>
-					<el-form-item label="供应商地址" label-width="120px" prop="address">
-						<el-input v-model="dataDialogForm.address" placeholder="请输入供应商公司具体地址" style="width: 300px"></el-input>
+					<el-form-item label="具体地址" label-width="120px" prop="address">
+						<el-input v-model="dataDialogForm.address" placeholder="xx省/xx市/xx区（县）" style="width: 200px">xx省/xx市/xx区（县）</el-input>
 					</el-form-item>
-          <el-form-item label="供应商省份" label-width="120px" prop="province">
-            <el-input v-model="dataDialogForm.province" placeholder="请输入供应商所在城市" style="width: 300px"></el-input>
+          <el-form-item label="城市" label-width="120px" prop="province">
+            <el-input v-model="dataDialogForm.province" placeholder="xx市" style="width: 200px">xx市</el-input>
           </el-form-item>
 					<el-form-item label="银行" label-width="120px" prop="branch">
-						<el-input v-model="dataDialogForm.branch" placeholder="银行" style="width: 300px"></el-input>
+						<el-input v-model="dataDialogForm.branch" placeholder="银行" style="width: 200px"></el-input>
 					</el-form-item>
 					<el-form-item label="描述信息" label-width="120px" prop="remark">
-						<el-input type="textarea" v-model="dataDialogForm.remark" style="width: 300px"></el-input>
+						<el-input type="textarea" v-model="dataDialogForm.remark" style="width: 200px"></el-input>
 					</el-form-item>
 				</el-form>
 				<div slot="footer" class="dialog-footer">
@@ -147,6 +147,7 @@ export default {
 			this.dataDialogForm.head = item.head,
 				this.dataDialogForm.phone = item.phone;
 			this.dataDialogForm.address = item.address;
+			this.dataDialogForm.province = item.province;
 			//   this.dataDialogForm.email=item.email;
 			//   this.dataDialogForm.fax = item.fax;
 			this.dataDialogForm.branch = item.branch;

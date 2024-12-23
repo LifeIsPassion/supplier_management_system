@@ -25,7 +25,11 @@ public interface CkmdDepositoryInMapper {
 
     CkmdDepositoryIn selectById1(int id);
 
+    CkmdDepositoryIn selectById2(int id);
+
     List<CkmdDepositoryIn> selectAll();
+
+    List<CkmdDepositoryIn> selectAllNo();
 
     int updateByExampleSelective(@Param("row") CkmdDepositoryIn row, @Param("example") CkmdDepositoryInExample example);
 

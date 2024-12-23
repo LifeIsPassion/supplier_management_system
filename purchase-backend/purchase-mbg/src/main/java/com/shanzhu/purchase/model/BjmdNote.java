@@ -26,6 +26,9 @@ public class BjmdNote implements Serializable {
     @ApiModelProperty(value = "笔记内容")
     private String content;
 
+    @ApiModelProperty(value = "是否通告")
+    private int isSys;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -82,6 +85,14 @@ public class BjmdNote implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getIsSys() {
+        return isSys;
+    }
+
+    public void setIsSys(int isSys) {
+        this.isSys = isSys;
     }
 
     @Override

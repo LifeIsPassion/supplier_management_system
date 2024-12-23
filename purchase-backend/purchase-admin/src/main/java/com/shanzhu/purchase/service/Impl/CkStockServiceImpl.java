@@ -1,6 +1,7 @@
 package com.shanzhu.purchase.service.Impl;
 
 
+import cn.hutool.core.collection.AvgPartition;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.shanzhu.purchase.dao.CkStockDao;
@@ -161,6 +162,26 @@ public class CkStockServiceImpl implements CkStockService {
         return allList;  //需要处理
     }
 
+    /**
+     * 直方图
+     * 仓库库存列表
+     */
+    @Override
+    public List<Map> depositoryList() {
+        List<Map> allList = new ArrayList<>();
+        Map<String, List> map = new HashMap<>();
+        List<String> shopList = new ArrayList<>();
+        List<Integer> surplusList = new ArrayList<>();
+        List<CkmdDepository> depositoryList = depositoryMapper.selectByExample(new CkmdDepositoryExample());
+        for (CkmdDepository ckmdDepository : depositoryList){
+            shopList.add(ckmdDepository.getName());
+            surplusList.add(ckmdDepository.getSurplus().intValue());
+        }
+        map.put("shopList",shopList);
+        map.put("surplusList",surplusList);
+        allList.add(map);
+        return allList;
+    }
 
     /**
      * 饼图 商品库存列表
@@ -179,18 +200,18 @@ public class CkStockServiceImpl implements CkStockService {
         //计算  容量转为kg
         BigDecimal bigKg = calculationUtils.INTCalculatingVolumeToWeight(totalVolume);
         //获取商品库存列表
-        List<CkmdStock> stockList = stockMapper.selectByExample(new CkmdStockExample());
+        List<CkmdStock> stockList = stockMapper.selectALL(new CkmdStockExample());
         for (CkmdStock stock : stockList) {
             String shop = stock.getShopName(); //商品名
             Long quantity = stock.getShopNumber(); //库存量
-            BigDecimal bigDecimal = new BigDecimal(quantity);
-            BigDecimal divideValue = bigDecimal.divide(bigKg, 0);   // 除后的
-            if (10 > divideValue.signum()) {
-                divideValue = BigDecimal.valueOf(10);
-            }
+//            BigDecimal bigDecimal = new BigDecimal(quantity);
+//            BigDecimal divideValue = bigDecimal.divide(bigKg, 0);   // 除后的
+//            if (10 > divideValue.signum()) {
+//                divideValue = BigDecimal.valueOf(10);
+//            }
             HashMap<String, String> map = new HashMap<>();
             map.put("name", shop);
-            map.put("value", String.valueOf(divideValue));
+            map.put("value", String.valueOf(quantity));
             list.add(map);
         }
         return list;
